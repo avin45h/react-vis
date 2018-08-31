@@ -53,7 +53,9 @@ class BarSeries extends AbstractSeries {
       marginTop,
       style,
       valuePosAttr,
-      valueSizeAttr
+      valueSizeAttr,
+      rx,
+      ry
     } = this.props;
 
     if (!data) {
@@ -95,7 +97,7 @@ class BarSeries extends AbstractSeries {
             },
             [linePosAttr]: lineFunctor(d) - itemSize +
             (itemSize * 2 / sameTypeTotal * sameTypeIndex),
-            [lineSizeAttr]: itemSize * 2 / sameTypeTotal,
+            [lineSizeAttr]: itemSize * (this.props.thickFactor || 2) / sameTypeTotal,
             [valuePosAttr]: Math.min(value0Functor(d), valueFunctor(d)),
             [valueSizeAttr]: Math.abs(-value0Functor(d) + valueFunctor(d)),
             onClick: e => this._valueClickHandler(d, e),
@@ -104,6 +106,9 @@ class BarSeries extends AbstractSeries {
             onMouseOut: e => this._valueMouseOutHandler(d, e),
             key: i
           };
+          if (this.props.rounded) {
+            attrs.rx = attrs.ry = attrs.width / 2;
+          }
           return (<rect {...attrs} />);
         })}
       </g>
