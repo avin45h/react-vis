@@ -127,6 +127,7 @@ class ArcSeries extends AbstractSeries {
       hideSeries,
       marginLeft,
       marginTop,
+      padAngle,
       style
     } = this.props;
 
@@ -161,6 +162,7 @@ class ArcSeries extends AbstractSeries {
     const opacity = this._getAttributeFunctor('opacity');
     const x = this._getAttributeFunctor('x');
     const y = this._getAttributeFunctor('y');
+    const arcLabel = this.props.arcLabel;
 
     return (
       <g className={`${predefinedClassName} ${className}`}
@@ -179,7 +181,7 @@ class ArcSeries extends AbstractSeries {
             startAngle: angle0(row) || 0,
             endAngle: angle(row)
           };
-          const arcedData = arcBuilder();
+          const arcedData = arcBuilder().padAngle(padAngle).cornerRadius(this.props.curve ? (arcArg.outerRadius - arcArg.innerRadius) : 0);
           const rowStyle = row.style || {};
           const rowClassName = row.className || '';
           return (<path {...{
@@ -199,6 +201,7 @@ class ArcSeries extends AbstractSeries {
             d: arcedData(arcArg)
           }} />);
         })}
+        <text fill="red" textAnchor="middle">{arcLabel}</text>
       </g>
     );
   }
@@ -211,7 +214,11 @@ ArcSeries.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number
   }),
-  arcClassName: PropTypes.string
+  arcClassName: PropTypes.string,
+  padAngle: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.number,
+  ]),
 };
 ArcSeries.defaultProps = defaultProps;
 ArcSeries.displayName = 'ArcSeries';
