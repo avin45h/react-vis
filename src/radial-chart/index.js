@@ -124,7 +124,13 @@ class RadialChart extends Component {
       style,
       width
     } = this.props;
-    const mappedData = getWedgesToRender({data, height, hideRootNode, width, getAngle});
+    const mappedData = getWedgesToRender({
+      data,
+      height,
+      hideRootNode,
+      width,
+      getAngle
+    });
     const radialDomain = getRadialDomain(mappedData);
     const arcProps = {
       colorType,
@@ -167,9 +173,15 @@ class RadialChart extends Component {
         yDomain={[-radialDomain, radialDomain]}
       >
         <ArcSeries {...arcProps} getAngle={d => d.angle} />
-        {showLabels && !labelsAboveChildren && <LabelSeries data={labels} style={labelsStyle} />}
+        {showLabels &&
+          !labelsAboveChildren && (
+            <LabelSeries data={labels} style={labelsStyle} />
+          )}
         {children}
-        {showLabels && labelsAboveChildren && <LabelSeries data={labels} style={labelsStyle} />}
+        {showLabels &&
+          labelsAboveChildren && (
+            <LabelSeries data={labels} style={labelsStyle} />
+          )}
       </XYPlot>
     );
   }
@@ -191,6 +203,7 @@ RadialChart.propTypes = {
   ).isRequired,
   getAngle: PropTypes.func,
   getAngle0: PropTypes.func,
+  padAngle: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   getRadius: PropTypes.func,
   getRadius0: PropTypes.func,
   getLabel: PropTypes.func,
@@ -210,6 +223,7 @@ RadialChart.defaultProps = {
   className: '',
   colorType: 'category',
   colorRange: DISCRETE_COLOR_RANGE,
+  padAngle: 0,
   getAngle: d => d.angle,
   getAngle0: d => d.angle0,
   getRadius: d => d.radius,

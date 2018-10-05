@@ -20,15 +20,12 @@
 
 import React, {Component} from 'react';
 
-import {
-  RadialChart,
-  Hint
-} from 'index';
+import {RadialChart, Hint} from 'index';
 
 export default class SimpleRadialChart extends Component {
   state = {
     value: false
-  }
+  };
   render() {
     const {value} = this.state;
     return (
@@ -47,8 +44,10 @@ export default class SimpleRadialChart extends Component {
         onValueMouseOver={v => this.setState({value: v})}
         onSeriesMouseOut={v => this.setState({value: false})}
         width={300}
-        height={300}>
-        {value && <Hint value={value}/>}
+        height={300}
+        padAngle={0.04}
+      >
+        {value && <Hint value={value} />}
       </RadialChart>
     );
   }

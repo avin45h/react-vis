@@ -35,7 +35,6 @@ const DEFAULT_MARGINS = {
 
 class Sankey extends Component {
   render() {
-
     const {
       align,
       animation,
@@ -44,6 +43,7 @@ class Sankey extends Component {
       hasVoronoi,
       height,
       hideLabels,
+      labelRotation,
       layout,
       links,
       linkOpacity,
@@ -60,12 +60,26 @@ class Sankey extends Component {
       style,
       width
     } = this.props;
-    const nodesCopy = [...new Array(nodes.length)].map((e, i) => ({...nodes[i]}));
-    const linksCopy = [...new Array(links.length)].map((e, i) => ({...links[i]}));
+    const nodesCopy = [...new Array(nodes.length)].map((e, i) => ({
+      ...nodes[i]
+    }));
+    const linksCopy = [...new Array(links.length)].map((e, i) => ({
+      ...links[i]
+    }));
 
-    const {marginLeft, marginTop, marginRight, marginBottom} = getInnerDimensions({
-      margin, height, width
-    }, DEFAULT_MARGINS);
+    const {
+      marginLeft,
+      marginTop,
+      marginRight,
+      marginBottom
+    } = getInnerDimensions(
+      {
+        margin,
+        height,
+        width
+      },
+      DEFAULT_MARGINS
+    );
     const sankeyInstance = sankey()
       .extent([
         [marginLeft, marginTop],
@@ -86,7 +100,8 @@ class Sankey extends Component {
       <XYPlot
         {...this.props}
         yType="literal"
-        className={`rv-sankey ${className}`}>
+        className={`rv-sankey ${className}`}
+      >
         {linksCopy.map((link, i) => (
           <SankeyLink
             style={style.links}
@@ -99,7 +114,8 @@ class Sankey extends Component {
             strokeWidth={Math.max(link.width, 1)}
             node={link}
             nWidth={nWidth}
-            key={`link-${i}`}/>
+            key={`link-${i}`}
+          />
         ))}
         <VerticalRectSeries
           animation={animation}
@@ -118,30 +134,38 @@ class Sankey extends Component {
           onValueClick={onValueClick}
           onValueMouseOver={onValueMouseOver}
           onValueMouseOut={onValueMouseOut}
-          colorType="literal" />
+          colorType="literal"
+        />
         {!hideLabels && (
           <LabelSeries
             animation={animation}
             className={className}
-            data={nodesCopy.map(node => {
+            rotation={labelRotation}
+            labelAnchorY="text-before-edge"
+            data={nodesCopy.map((node, i) => {
               return {
                 x: node.x0 + (node.x0 < width / 2 ? nWidth + 10 : -10),
                 y: (node.y0 + node.y1) / 2 - marginTop,
                 label: node.name,
                 style: {
+                  textAnchor: node.x0 < width / 2 ? 'start' : 'end',
                   dy: '-.5em',
                   ...style.labels
-                }
+                },
+                // unfortunately this can not be ...node as the version
+                // found in nodesCopy is modified by the sankey process
+                ...nodes[i]
               };
             })}
-            />
+          />
         )}
         {hasVoronoi && (
           <Voronoi
             className="rv-sankey__voronoi"
             extent={[
               [-marginLeft, -marginTop],
-              [width + marginRight, height + marginBottom]]}
+              [width + marginRight, height + marginBottom]
+            ]}
             nodes={nodesCopy}
             onClick={onValueClick}
             onHover={onValueMouseOver}
@@ -154,7 +178,6 @@ class Sankey extends Component {
       </XYPlot>
     );
   }
-
 }
 
 Sankey.defaultProps = {
@@ -162,6 +185,7 @@ Sankey.defaultProps = {
   className: '',
   hasVoronoi: false,
   hideLabels: false,
+  labelRotation: 0,
   layout: 50,
   margin: DEFAULT_MARGINS,
   nodePadding: 10,
@@ -178,23 +202,23 @@ Sankey.defaultProps = {
     labels: {}
   }
 };
+
 Sankey.propTypes = {
   align: PropTypes.oneOf(['justify', 'left', 'right', 'center']),
   className: PropTypes.string,
   hasVoronoi: PropTypes.bool,
   height: PropTypes.number.isRequired,
   hideLabels: PropTypes.bool,
+  labelRotation: PropTypes.number,
   layout: PropTypes.number,
-  links: PropTypes.arrayOf(PropTypes.shape({
-    source: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.object
-    ]).isRequired,
-    target: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.object
-    ]).isRequired
-  })).isRequired,
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      source: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
+        .isRequired,
+      target: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
+        .isRequired
+    })
+  ).isRequired,
   margin: MarginPropType,
   nodePadding: PropTypes.number,
   nodes: PropTypes.arrayOf(PropTypes.object).isRequired,

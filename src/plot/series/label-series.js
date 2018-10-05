@@ -26,10 +26,14 @@ import {ANIMATED_SERIES_PROPS} from 'utils/series-utils';
 const predefinedClassName = 'rv-xy-plot__series rv-xy-plot__series--label';
 
 const getTextAnchor = (labelAnchorX, leftOfMiddle) => {
-  return labelAnchorX ? labelAnchorX : (leftOfMiddle ? 'start' : 'end');
+  return labelAnchorX ? labelAnchorX : leftOfMiddle ? 'start' : 'end';
 };
 const getAlignmentBaseline = (labelAnchorY, aboveMiddle) => {
-  return labelAnchorY ? labelAnchorY : (aboveMiddle ? 'text-before-edge' : 'text-after-edge');
+  return labelAnchorY
+    ? labelAnchorY
+    : aboveMiddle
+      ? 'text-before-edge'
+      : 'text-after-edge';
 };
 
 class LabelSeries extends AbstractSeries {
@@ -81,9 +85,15 @@ class LabelSeries extends AbstractSeries {
           const leftOfMiddle = xVal < (xRange[1] - xRange[0]) / 2;
           const aboveMiddle = yVal < Math.abs(yRange[1] - yRange[0]) / 2;
 
-          const x = xVal + (allowOffsetToBeReversed && leftOfMiddle ? -1 : 1) * (xOffset || 0);
-          const y = yVal + (allowOffsetToBeReversed && aboveMiddle ? -1 : 1) * (yOffset || 0);
+          const x =
+            xVal +
+            (allowOffsetToBeReversed && leftOfMiddle ? -1 : 1) * (xOffset || 0);
+          const y =
+            yVal +
+            (allowOffsetToBeReversed && aboveMiddle ? -1 : 1) * (yOffset || 0);
 
+          const hasRotationValueSet = d.rotation === 0 || d.rotation;
+          const labelRotation = hasRotationValueSet ? d.rotation : rotation;
           const attrs = {
             alignmentBaseline: getAlignmentBaseline(labelAnchorY, aboveMiddle),
             className: 'rv-xy-plot__series--label-text',
@@ -95,7 +105,7 @@ class LabelSeries extends AbstractSeries {
             textAnchor: getTextAnchor(labelAnchorX, leftOfMiddle),
             x,
             y,
-            transform: `rotate(${d.rotation || rotation},${x},${y})`,
+            transform: `rotate(${labelRotation},${x},${y})`,
             ...markStyle
           };
           const textContent = getLabel(_data ? _data[i] : d);
