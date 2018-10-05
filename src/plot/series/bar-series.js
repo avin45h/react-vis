@@ -30,10 +30,9 @@ import AbstractSeries from './abstract-series';
 const predefinedClassName = 'rv-xy-plot__series rv-xy-plot__series--bar';
 
 class BarSeries extends AbstractSeries {
-
   static get propTypes() {
     return {
-      ... AbstractSeries.propTypes,
+      ...AbstractSeries.propTypes,
       linePosAttr: PropTypes.string,
       valuePosAttr: PropTypes.string,
       lineSizeAttr: PropTypes.string,
@@ -65,7 +64,7 @@ class BarSeries extends AbstractSeries {
     if (animation) {
       return (
         <Animation {...this.props} animatedProps={ANIMATED_SERIES_PROPS}>
-          <BarSeries {...this.props} animation={null}/>
+          <BarSeries {...this.props} animation={null} />
         </Animation>
       );
     }
@@ -76,17 +75,19 @@ class BarSeries extends AbstractSeries {
     const lineFunctor = this._getAttributeFunctor(linePosAttr);
     const valueFunctor = this._getAttributeFunctor(valuePosAttr);
     const value0Functor = this._getAttr0Functor(valuePosAttr);
-    const fillFunctor = this._getAttributeFunctor('fill') ||
-      this._getAttributeFunctor('color');
-    const strokeFunctor = this._getAttributeFunctor('stroke') ||
-      this._getAttributeFunctor('color');
+    const fillFunctor =
+      this._getAttributeFunctor('fill') || this._getAttributeFunctor('color');
+    const strokeFunctor =
+      this._getAttributeFunctor('stroke') || this._getAttributeFunctor('color');
     const opacityFunctor = this._getAttributeFunctor('opacity');
 
     const itemSize = (distance / 2) * 0.85;
 
     return (
-      <g className={`${predefinedClassName} ${className}`}
-        transform={`translate(${marginLeft},${marginTop})`}>
+      <g
+        className={`${predefinedClassName} ${className}`}
+        transform={`translate(${marginLeft},${marginTop})`}
+      >
         {data.map((d, i) => {
           const attrs = {
             style: {
@@ -95,9 +96,11 @@ class BarSeries extends AbstractSeries {
               fill: fillFunctor && fillFunctor(d),
               ...style
             },
-            [linePosAttr]: lineFunctor(d) - itemSize +
-            (itemSize * 2 / sameTypeTotal * sameTypeIndex),
-            [lineSizeAttr]: itemSize * (this.props.thickFactor || 2) / sameTypeTotal,
+            [linePosAttr]:
+              lineFunctor(d) -
+              itemSize +
+              ((itemSize * 2) / sameTypeTotal) * sameTypeIndex,
+            [lineSizeAttr]: (itemSize *  (this.props.thickFactor || 2)) / sameTypeTotal,
             [valuePosAttr]: Math.min(value0Functor(d), valueFunctor(d)),
             [valueSizeAttr]: Math.abs(-value0Functor(d) + valueFunctor(d)),
             onClick: e => this._valueClickHandler(d, e),

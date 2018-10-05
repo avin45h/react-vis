@@ -38,6 +38,10 @@ The SVG mode is accessed by using the normal `MarkSeries`, just as above, while 
 
 -**NOTE**: using the Canvas version of this layer disables animation
 
+Mark series can usefully be deployed with voronois for fast and accurate mouse overs!
+
+<!-- INJECT:"DynamicCrosshairScatterplotWithLink" -->
+
 ## Data format reference
 
 #### x
@@ -219,7 +223,7 @@ Default: none
 This handler is triggered either when the user's mouse enters a mark.
 The handler passes two arguments, the corresponding datapoint and the actual event.
 ```jsx
-<BarSeries
+<MarkSeries
 ...
   onValueMouseOver={(datapoint, event)=>{
     // does something on click
