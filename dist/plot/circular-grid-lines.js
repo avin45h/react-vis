@@ -112,7 +112,8 @@ var CircularGridLines = function (_PureComponent) {
         'g',
         {
           transform: 'translate(' + (xScale(centerX) + marginLeft) + ',' + (yScale(centerY) + marginTop) + ')',
-          className: 'rv-xy-plot__circular-grid-lines' },
+          className: 'rv-xy-plot__circular-grid-lines'
+        },
         values.reduce(function (res, value, index) {
           var radius = xScale(value);
           if (rRange && (radius < rRange[0] || radius > rRange[1])) {
@@ -121,7 +122,8 @@ var CircularGridLines = function (_PureComponent) {
           return res.concat([_react2.default.createElement('circle', _extends({ cx: 0, cy: 0, r: radius }, {
             key: index,
             className: 'rv-xy-plot__circular-grid-lines__line',
-            style: style }))]);
+            style: style
+          }))]);
         }, [])
       );
     }

@@ -96,7 +96,8 @@ var SankeyLink = function (_PureComponent) {
           return onLinkMouseOut(node, e);
         },
         strokeWidth: strokeWidth,
-        fill: 'none' }));
+        fill: 'none'
+      }));
     }
   }]);
 

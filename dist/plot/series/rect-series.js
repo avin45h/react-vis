@@ -105,8 +105,10 @@ var RectSeries = function (_AbstractSeries) {
 
       return _react2.default.createElement(
         'g',
-        { className: predefinedClassName + ' ' + className,
-          transform: 'translate(' + marginLeft + ',' + marginTop + ')' },
+        {
+          className: predefinedClassName + ' ' + className,
+          transform: 'translate(' + marginLeft + ',' + marginTop + ')'
+        },
         data.map(function (d, i) {
           var _attrs;
 

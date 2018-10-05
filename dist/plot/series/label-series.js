@@ -129,6 +129,8 @@ var LabelSeries = function (_AbstractSeries) {
           var x = xVal + (allowOffsetToBeReversed && leftOfMiddle ? -1 : 1) * (xOffset || 0);
           var y = yVal + (allowOffsetToBeReversed && aboveMiddle ? -1 : 1) * (yOffset || 0);
 
+          var hasRotationValueSet = d.rotation === 0 || d.rotation;
+          var labelRotation = hasRotationValueSet ? d.rotation : rotation;
           var attrs = _extends({
             alignmentBaseline: getAlignmentBaseline(labelAnchorY, aboveMiddle),
             className: 'rv-xy-plot__series--label-text',
@@ -148,7 +150,7 @@ var LabelSeries = function (_AbstractSeries) {
             textAnchor: getTextAnchor(labelAnchorX, leftOfMiddle),
             x: x,
             y: y,
-            transform: 'rotate(' + (d.rotation || rotation) + ',' + x + ',' + y + ')'
+            transform: 'rotate(' + labelRotation + ',' + x + ',' + y + ')'
           }, markStyle);
           var textContent = getLabel(_data ? _data[i] : d);
           return res.concat([_react2.default.createElement(

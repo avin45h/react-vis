@@ -172,7 +172,13 @@ var Sunburst = function (_React$Component) {
           getSize = _props.getSize,
           colorType = _props.colorType;
 
-      var mappedData = getNodesToRender({ data: data, height: height, hideRootNode: hideRootNode, width: width, getSize: getSize });
+      var mappedData = getNodesToRender({
+        data: data,
+        height: height,
+        hideRootNode: hideRootNode,
+        width: width,
+        getSize: getSize
+      });
       var radialDomain = (0, _seriesUtils.getRadialDomain)(mappedData);
       var margin = (0, _chartUtils.getRadialLayoutMargin)(width, height, radialDomain);
 
@@ -199,7 +205,8 @@ var Sunburst = function (_React$Component) {
           className: predefinedClassName + ' ' + className,
           margin: margin,
           xDomain: [-radialDomain, radialDomain],
-          yDomain: [-radialDomain, radialDomain] },
+          yDomain: [-radialDomain, radialDomain]
+        },
         _react2.default.createElement(_arcSeries2.default, _extends({
           colorType: colorType
         }, this.props, {
@@ -207,7 +214,11 @@ var Sunburst = function (_React$Component) {
           radiusDomain: [0, radialDomain],
           // need to present a stripped down version for interpolation
           data: animation ? mappedData.map(function (row, index) {
-            return _extends({}, row, { parent: null, children: null, index: index });
+            return _extends({}, row, {
+              parent: null,
+              children: null,
+              index: index
+            });
           }) : mappedData,
           _data: animation ? mappedData : null,
           arcClassName: predefinedClassName + '__series--radial__arc'
@@ -240,7 +251,8 @@ Sunburst.propTypes = {
   onValueMouseOver: _propTypes2.default.func,
   onValueMouseOut: _propTypes2.default.func,
   getSize: _propTypes2.default.func,
-  width: _propTypes2.default.number.isRequired
+  width: _propTypes2.default.number.isRequired,
+  padAngle: _propTypes2.default.oneOfType([_propTypes2.default.func, _propTypes2.default.number])
 };
 Sunburst.defaultProps = {
   getAngle: function getAngle(d) {
@@ -260,7 +272,8 @@ Sunburst.defaultProps = {
   },
   getSize: function getSize(d) {
     return d.size;
-  }
+  },
+  padAngle: 0
 };
 
 exports.default = Sunburst;

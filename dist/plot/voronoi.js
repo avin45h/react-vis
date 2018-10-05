@@ -16,6 +16,8 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _d3Voronoi = require('d3-voronoi');
 
+var _scalesUtils = require('../utils/scales-utils');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var NOOP = function NOOP(f) {
@@ -37,22 +39,31 @@ function getNodeIndex(evt) {
   return Array.prototype.indexOf.call(parentNode.childNodes, target);
 }
 
-function Voronoi(_ref) {
-  var className = _ref.className,
-      extent = _ref.extent,
-      nodes = _ref.nodes,
-      onBlur = _ref.onBlur,
-      _onClick = _ref.onClick,
-      _onMouseUp = _ref.onMouseUp,
-      _onMouseDown = _ref.onMouseDown,
-      onHover = _ref.onHover,
-      polygonStyle = _ref.polygonStyle,
-      style = _ref.style,
-      x = _ref.x,
-      y = _ref.y;
+function getExtent(_ref) {
+  var innerWidth = _ref.innerWidth,
+      innerHeight = _ref.innerHeight,
+      marginLeft = _ref.marginLeft,
+      marginTop = _ref.marginTop;
 
+  return [[marginLeft, marginTop], [innerWidth + marginLeft, innerHeight + marginTop]];
+}
+
+function Voronoi(props) {
+  var className = props.className,
+      extent = props.extent,
+      nodes = props.nodes,
+      onBlur = props.onBlur,
+      _onClick = props.onClick,
+      _onMouseUp = props.onMouseUp,
+      _onMouseDown = props.onMouseDown,
+      onHover = props.onHover,
+      polygonStyle = props.polygonStyle,
+      style = props.style,
+      x = props.x,
+      y = props.y;
   // Create a voronoi with each node center points
-  var voronoiInstance = (0, _d3Voronoi.voronoi)().x(x).y(y).extent(extent);
+
+  var voronoiInstance = (0, _d3Voronoi.voronoi)().x(x || (0, _scalesUtils.getAttributeFunctor)(props, 'x')).y(y || (0, _scalesUtils.getAttributeFunctor)(props, 'y')).extent(extent || getExtent(props));
 
   // Create an array of polygons corresponding to the cells in voronoi
   var polygons = voronoiInstance.polygons(nodes);
@@ -104,31 +115,26 @@ function Voronoi(_ref) {
         style: _extends({
           pointerEvents: 'all'
         }, polygonStyle, d.data && d.data.style),
-        key: i });
+        key: i
+      });
     })
   );
 }
 
 Voronoi.requiresSVG = true;
-
+Voronoi.displayName = 'Voronoi';
 Voronoi.defaultProps = {
   className: '',
   onBlur: NOOP,
   onClick: NOOP,
   onHover: NOOP,
   onMouseDown: NOOP,
-  onMouseUp: NOOP,
-  x: function x(d) {
-    return d.x;
-  },
-  y: function y(d) {
-    return d.y;
-  }
+  onMouseUp: NOOP
 };
 
 Voronoi.propTypes = {
   className: _propTypes2.default.string,
-  extent: _propTypes2.default.arrayOf(_propTypes2.default.arrayOf(_propTypes2.default.number)).isRequired,
+  extent: _propTypes2.default.arrayOf(_propTypes2.default.arrayOf(_propTypes2.default.number)),
   nodes: _propTypes2.default.arrayOf(_propTypes2.default.object).isRequired,
   onBlur: _propTypes2.default.func,
   onClick: _propTypes2.default.func,

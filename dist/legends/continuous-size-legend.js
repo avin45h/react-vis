@@ -67,18 +67,25 @@ function ContinuousSizeLegend(_ref) {
 
   for (var i = 0; i < circlesTotal; i++) {
     var size = step * i + startSize;
-    circles.push(_react2.default.createElement('div', { key: i, className: 'rv-bubble', style: {
+    circles.push(_react2.default.createElement('div', {
+      key: i,
+      className: 'rv-bubble',
+      style: {
         width: size,
         height: size,
         borderRadius: size / 2
-      } }));
+      }
+    }));
     // Add the separator in order to justify the content (otherwise the tags
     // will be stacked together without any margins around).
     circles.push(' ');
   }
   return _react2.default.createElement(
     'div',
-    { className: 'rv-continuous-size-legend ' + className, style: { width: width, height: height } },
+    {
+      className: 'rv-continuous-size-legend ' + className,
+      style: { width: width, height: height }
+    },
     _react2.default.createElement(
       'div',
       { className: 'rv-bubbles', style: { height: endSize } },

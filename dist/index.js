@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ScaleUtils = exports.AxisUtils = exports.FlexibleHeightXYPlot = exports.FlexibleWidthXYPlot = exports.FlexibleXYPlot = exports.makeWidthFlexible = exports.makeVisFlexible = exports.makeHeightFlexible = exports.Sunburst = exports.Sankey = exports.ParallelCoordinates = exports.RadarChart = exports.RadialChart = exports.Treemap = exports.ContinuousSizeLegend = exports.ContinuousColorLegend = exports.SearchableDiscreteColorLegend = exports.DiscreteColorLegend = exports.Voronoi = exports.HorizontalGridLines = exports.VerticalGridLines = exports.GradientDefs = exports.GridLines = exports.CircularGridLines = exports.YAxis = exports.XAxis = exports.DecorativeAxis = exports.XYPlot = exports.Crosshair = exports.Borders = exports.Hint = exports.LineMarkSeriesCanvas = exports.LineMarkSeries = exports.ArcSeries = exports.AreaSeries = exports.CustomSVGSeries = exports.ContourSeries = exports.HeatmapSeries = exports.WhiskerSeries = exports.MarkSeriesCanvas = exports.MarkSeries = exports.RectSeriesCanvas = exports.RectSeries = exports.PolygonSeries = exports.LabelSeries = exports.HorizontalRectSeriesCanvas = exports.HorizontalRectSeries = exports.VerticalRectSeriesCanvas = exports.VerticalRectSeries = exports.VerticalBarSeriesCanvas = exports.VerticalBarSeries = exports.HorizontalBarSeriesCanvas = exports.HorizontalBarSeries = exports.LineSeriesCanvas = exports.LineSeries = exports.AbstractSeries = undefined;
+exports.ScaleUtils = exports.AxisUtils = exports.FlexibleHeightXYPlot = exports.FlexibleWidthXYPlot = exports.FlexibleXYPlot = exports.makeWidthFlexible = exports.makeVisFlexible = exports.makeHeightFlexible = exports.Sunburst = exports.Sankey = exports.ParallelCoordinates = exports.RadarChart = exports.RadialChart = exports.Treemap = exports.ContinuousSizeLegend = exports.ContinuousColorLegend = exports.SearchableDiscreteColorLegend = exports.DiscreteColorLegend = exports.Highlight = exports.Voronoi = exports.HorizontalGridLines = exports.VerticalGridLines = exports.GradientDefs = exports.GridLines = exports.CircularGridLines = exports.YAxis = exports.XAxis = exports.DecorativeAxis = exports.XYPlot = exports.Crosshair = exports.Borders = exports.Hint = exports.LineMarkSeriesCanvas = exports.LineMarkSeries = exports.ArcSeries = exports.AreaSeries = exports.CustomSVGSeries = exports.ContourSeries = exports.HexbinSeries = exports.HeatmapSeries = exports.WhiskerSeries = exports.MarkSeriesCanvas = exports.MarkSeries = exports.RectSeriesCanvas = exports.RectSeries = exports.PolygonSeries = exports.LabelSeries = exports.HorizontalRectSeriesCanvas = exports.HorizontalRectSeries = exports.VerticalRectSeriesCanvas = exports.VerticalRectSeries = exports.VerticalBarSeriesCanvas = exports.VerticalBarSeries = exports.HorizontalBarSeriesCanvas = exports.HorizontalBarSeries = exports.LineSeriesCanvas = exports.LineSeries = exports.AbstractSeries = undefined;
 
 var _makeVisFlexible = require('./make-vis-flexible');
 
@@ -120,6 +120,10 @@ var _heatmapSeries = require('./plot/series/heatmap-series');
 
 var _heatmapSeries2 = _interopRequireDefault(_heatmapSeries);
 
+var _hexbinSeries = require('./plot/series/hexbin-series');
+
+var _hexbinSeries2 = _interopRequireDefault(_hexbinSeries);
+
 var _contourSeries = require('./plot/series/contour-series');
 
 var _contourSeries2 = _interopRequireDefault(_contourSeries);
@@ -195,6 +199,10 @@ var _horizontalGridLines2 = _interopRequireDefault(_horizontalGridLines);
 var _voronoi = require('./plot/voronoi');
 
 var _voronoi2 = _interopRequireDefault(_voronoi);
+
+var _highlight = require('./plot/highlight');
+
+var _highlight2 = _interopRequireDefault(_highlight);
 
 var _discreteColorLegend = require('./legends/discrete-color-legend');
 
@@ -284,6 +292,7 @@ exports.MarkSeries = _markSeries2.default;
 exports.MarkSeriesCanvas = _markSeriesCanvas2.default;
 exports.WhiskerSeries = _whiskerSeries2.default;
 exports.HeatmapSeries = _heatmapSeries2.default;
+exports.HexbinSeries = _hexbinSeries2.default;
 exports.ContourSeries = _contourSeries2.default;
 exports.CustomSVGSeries = _customSvgSeries2.default;
 exports.AreaSeries = _areaSeries2.default;
@@ -303,6 +312,7 @@ exports.GradientDefs = _gradientDefs2.default;
 exports.VerticalGridLines = _verticalGridLines2.default;
 exports.HorizontalGridLines = _horizontalGridLines2.default;
 exports.Voronoi = _voronoi2.default;
+exports.Highlight = _highlight2.default;
 exports.DiscreteColorLegend = _discreteColorLegend2.default;
 exports.SearchableDiscreteColorLegend = _searchableDiscreteColorLegend2.default;
 exports.ContinuousColorLegend = _continuousColorLegend2.default;

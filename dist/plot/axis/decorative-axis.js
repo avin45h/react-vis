@@ -99,14 +99,18 @@ var DecorativeAxis = function (_AbstractSeries) {
 
       return _react2.default.createElement(
         'g',
-        { className: predefinedClassName + ' ' + className,
-          transform: 'translate(' + marginLeft + ',' + marginTop + ')' },
+        {
+          className: predefinedClassName + ' ' + className,
+          transform: 'translate(' + marginLeft + ',' + marginTop + ')'
+        },
         _react2.default.createElement('line', _extends({}, _extends({
           x1: x({ x: axisStart.x }),
           x2: x({ x: axisEnd.x }),
           y1: y({ y: axisStart.y }),
           y2: y({ y: axisEnd.y })
-        }, style.line), { className: 'rv-xy-plot__axis__line' })),
+        }, style.line), {
+          className: 'rv-xy-plot__axis__line'
+        })),
         _react2.default.createElement(
           'g',
           { className: 'rv-xy-manipulable-axis__ticks' },

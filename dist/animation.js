@@ -105,18 +105,12 @@ var Animation = function (_PureComponent) {
         props.onStart();
       }
     }
-
-    /**
-     * Update the interpolator function and assign it to this._interpolator.
-     * @param {Object} oldProps Old props.
-     * @param {Object} newProps New props.
-     * @private
-     */
-
   }, {
-    key: '_updateInterpolator',
-    value: function _updateInterpolator(oldProps, newProps) {
-      this._interpolator = (0, _d3Interpolate.interpolate)(extractAnimatedPropValues(oldProps), newProps ? extractAnimatedPropValues(newProps) : null);
+    key: '_motionEndHandler',
+    value: function _motionEndHandler() {
+      if (this.props.onEnd) {
+        this.props.onEnd();
+      }
     }
 
     /**
@@ -144,7 +138,10 @@ var Animation = function (_PureComponent) {
       if (data && child.props._data) {
         data = data.map(function (row, index) {
           var correspondingCell = child.props._data[index];
-          return _extends({}, row, { parent: correspondingCell.parent, children: correspondingCell.children });
+          return _extends({}, row, {
+            parent: correspondingCell.parent,
+            children: correspondingCell.children
+          });
         });
       }
 
@@ -154,12 +151,18 @@ var Animation = function (_PureComponent) {
         _animation: Math.random()
       }));
     }
+
+    /**
+     * Update the interpolator function and assign it to this._interpolator.
+     * @param {Object} oldProps Old props.
+     * @param {Object} newProps New props.
+     * @private
+     */
+
   }, {
-    key: '_motionEndHandler',
-    value: function _motionEndHandler() {
-      if (this.props.onEnd) {
-        this.props.onEnd();
-      }
+    key: '_updateInterpolator',
+    value: function _updateInterpolator(oldProps, newProps) {
+      this._interpolator = (0, _d3Interpolate.interpolate)(extractAnimatedPropValues(oldProps), newProps ? extractAnimatedPropValues(newProps) : null);
     }
   }, {
     key: 'render',

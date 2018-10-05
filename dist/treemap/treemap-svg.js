@@ -127,7 +127,8 @@ var TreemapSVG = function (_React$Component) {
           getSize: function getSize(d) {
             return d.size;
           },
-          style: style }),
+          style: style
+        }),
         minY: minY,
         maxY: maxY,
         minX: minX,

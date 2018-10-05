@@ -97,7 +97,8 @@ var HeatmapSeries = function (_AbstractSeries) {
         'g',
         {
           className: predefinedClassName + ' ' + className,
-          transform: 'translate(' + marginLeft + ',' + marginTop + ')' },
+          transform: 'translate(' + marginLeft + ',' + marginTop + ')'
+        },
         data.map(function (d, i) {
           var attrs = _extends({
             style: _extends({

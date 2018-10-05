@@ -70,10 +70,14 @@ function ContinuousColorLegend(_ref) {
   colors.push(endColor);
   return _react2.default.createElement(
     'div',
-    { className: 'rv-continuous-color-legend ' + className, style: { width: width, height: height } },
+    {
+      className: 'rv-continuous-color-legend ' + className,
+      style: { width: width, height: height }
+    },
     _react2.default.createElement('div', {
       className: 'rv-gradient',
-      style: { background: 'linear-gradient(to right, ' + colors.join(',') + ')' } }),
+      style: { background: 'linear-gradient(to right, ' + colors.join(',') + ')' }
+    }),
     _react2.default.createElement(
       'div',
       { className: 'rv-legend-titles' },

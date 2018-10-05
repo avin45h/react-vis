@@ -69,7 +69,8 @@ function predefinedComponents(type) {
     case 'diamond':
       return _react2.default.createElement('polygon', {
         style: style,
-        points: '0 0 ' + size / 2 + ' ' + size / 2 + ' 0 ' + size + ' ' + -size / 2 + ' ' + size / 2 + ' 0 0' });
+        points: '0 0 ' + size / 2 + ' ' + size / 2 + ' 0 ' + size + ' ' + -size / 2 + ' ' + size / 2 + ' 0 0'
+      });
     case 'star':
       var starPoints = [].concat(_toConsumableArray(new Array(5))).map(function (c, index) {
         var angle = index / 5 * Math.PI * 2;
@@ -81,9 +82,20 @@ function predefinedComponents(type) {
       }).join(' ');
       return _react2.default.createElement('polygon', {
         points: starPoints,
-        x: '0', y: '0', height: size, width: size, style: style });
+        x: '0',
+        y: '0',
+        height: size,
+        width: size,
+        style: style
+      });
     case 'square':
-      return _react2.default.createElement('rect', { x: '' + -size / 2, y: '' + -size / 2, height: size, width: size, style: style });
+      return _react2.default.createElement('rect', {
+        x: '' + -size / 2,
+        y: '' + -size / 2,
+        height: size,
+        width: size,
+        style: style
+      });
     default:
     case 'circle':
       return _react2.default.createElement('circle', { cx: '0', cy: '0', r: size / 2, style: style });
@@ -176,8 +188,10 @@ var CustomSVGSeries = function (_AbstractSeries) {
       });
       return _react2.default.createElement(
         'g',
-        { className: predefinedClassName + ' ' + className,
-          transform: 'translate(' + marginLeft + ',' + marginTop + ')' },
+        {
+          className: predefinedClassName + ' ' + className,
+          transform: 'translate(' + marginLeft + ',' + marginTop + ')'
+        },
         contents
       );
     }

@@ -18,6 +18,10 @@ var _d3Shape = require('d3-shape');
 
 var d3Shape = _interopRequireWildcard(_d3Shape);
 
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
 var _theme = require('../../theme');
 
 var _scalesUtils = require('../../utils/scales-utils');
@@ -67,7 +71,7 @@ var LineSeriesCanvas = function (_AbstractSeries) {
   _createClass(LineSeriesCanvas, [{
     key: 'render',
     value: function render() {
-      return null;
+      return _react2.default.createElement('div', null);
     }
   }], [{
     key: 'renderLayer',

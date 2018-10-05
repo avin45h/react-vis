@@ -53,7 +53,10 @@ function DiscreteColorLegend(_ref) {
 
   return _react2.default.createElement(
     'div',
-    { className: 'rv-discrete-color-legend ' + orientation + ' ' + className, style: { width: width, height: height } },
+    {
+      className: 'rv-discrete-color-legend ' + orientation + ' ' + className,
+      style: { width: width, height: height }
+    },
     items.map(function (item, i) {
       return _react2.default.createElement(_discreteColorLegendItem2.default, {
         title: item.title ? item.title : item,

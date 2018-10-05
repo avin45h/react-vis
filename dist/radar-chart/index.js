@@ -103,7 +103,10 @@ function getAxes(props) {
       animation: animation,
       key: index + '-axis',
       axisStart: { x: 0, y: 0 },
-      axisEnd: { x: getCoordinate(Math.cos(angle)), y: getCoordinate(Math.sin(angle)) },
+      axisEnd: {
+        x: getCoordinate(Math.cos(angle)),
+        y: getCoordinate(Math.sin(angle))
+      },
       axisDomain: sortedDomain,
       numberOfTicks: 5,
       tickValue: domainTickFormat,
@@ -265,7 +268,8 @@ var RadarChart = function (_Component) {
         animation: animation,
         key: className,
         className: predefinedClassName + '-label',
-        data: getLabels({ domains: domains, style: style.labels, startingAngle: startingAngle }) });
+        data: getLabels({ domains: domains, style: style.labels, startingAngle: startingAngle })
+      });
       return _react2.default.createElement(
         _xyPlot2.default,
         {
@@ -277,7 +281,8 @@ var RadarChart = function (_Component) {
           onMouseLeave: onMouseLeave,
           onMouseEnter: onMouseEnter,
           xDomain: [-1, 1],
-          yDomain: [-1, 1] },
+          yDomain: [-1, 1]
+        },
         children,
         axes.concat(polygons).concat(labelSeries)
       );

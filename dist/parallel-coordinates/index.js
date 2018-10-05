@@ -64,7 +64,13 @@ var _decorativeAxis = require('../plot/axis/decorative-axis');
 
 var _decorativeAxis2 = _interopRequireDefault(_decorativeAxis);
 
+var _highlight = require('../plot/highlight');
+
+var _highlight2 = _interopRequireDefault(_highlight);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -142,6 +148,7 @@ function getLabels(props) {
  */
 function getLines(props) {
   var animation = props.animation,
+      brushFilters = props.brushFilters,
       colorRange = props.colorRange,
       domains = props.domains,
       data = props.data,
@@ -155,25 +162,38 @@ function getLines(props) {
     acc[name] = (0, _d3Scale.scaleLinear)().domain(domain).range([0, 1]);
     return acc;
   }, {});
+  // const
 
   return data.map(function (row, rowIndex) {
+    var withinFilteredRange = true;
     var mappedData = domains.map(function (domain, index) {
       var getValue = domain.getValue,
           name = domain.name;
 
-      return {
-        x: name,
-        y: scales[name](getValue ? getValue(row) : row[name])
-      };
+      // watch out! Gotcha afoot
+      // yVal after being scale is in [0, 1] range
+
+      var yVal = scales[name](getValue ? getValue(row) : row[name]);
+      var filter = brushFilters[name];
+      // filter value after being scale back from pixel space is also in [0, 1]
+      if (filter && (yVal < filter.min || yVal > filter.max)) {
+        withinFilteredRange = false;
+      }
+      return { x: name, y: yVal };
     });
+    var selectedName = predefinedClassName + '-line';
+    var unselectedName = selectedName + ' ' + predefinedClassName + '-line-unselected';
     var lineProps = {
       animation: animation,
-      className: predefinedClassName + '-line',
+      className: withinFilteredRange ? selectedName : unselectedName,
       key: rowIndex + '-polygon',
       data: mappedData,
       color: row.color || colorRange[rowIndex % colorRange.length],
       style: _extends({}, style.lines, row.style || {})
     };
+    if (!withinFilteredRange) {
+      lineProps.style = _extends({}, lineProps.style, style.deselectedLineStyle);
+    }
     return showMarks ? _react2.default.createElement(_lineMarkSeries2.default, lineProps) : _react2.default.createElement(_lineSeries2.default, lineProps);
   });
 }
@@ -182,16 +202,30 @@ var ParallelCoordinates = function (_Component) {
   _inherits(ParallelCoordinates, _Component);
 
   function ParallelCoordinates() {
+    var _ref2;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, ParallelCoordinates);
 
-    return _possibleConstructorReturn(this, (ParallelCoordinates.__proto__ || Object.getPrototypeOf(ParallelCoordinates)).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref2 = ParallelCoordinates.__proto__ || Object.getPrototypeOf(ParallelCoordinates)).call.apply(_ref2, [this].concat(args))), _this), _this.state = {
+      brushFilters: {}
+    }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(ParallelCoordinates, [{
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
+      var brushFilters = this.state.brushFilters;
       var _props = this.props,
           animation = _props.animation,
+          brushing = _props.brushing,
           className = _props.className,
           children = _props.children,
           colorRange = _props.colorRange,
@@ -218,6 +252,7 @@ var ParallelCoordinates = function (_Component) {
 
       var lines = getLines({
         animation: animation,
+        brushFilters: brushFilters,
         colorRange: colorRange,
         domains: domains,
         data: data,
@@ -228,7 +263,13 @@ var ParallelCoordinates = function (_Component) {
         animation: true,
         key: className,
         className: predefinedClassName + '-label',
-        data: getLabels({ domains: domains, style: style.labels }) });
+        data: getLabels({ domains: domains, style: style.labels })
+      });
+
+      var _getInnerDimensions = (0, _chartUtils.getInnerDimensions)(this.props, _chartUtils.DEFAULT_MARGINS),
+          marginLeft = _getInnerDimensions.marginLeft,
+          marginRight = _getInnerDimensions.marginRight;
+
       return _react2.default.createElement(
         _xyPlot2.default,
         {
@@ -240,9 +281,26 @@ var ParallelCoordinates = function (_Component) {
           onMouseLeave: onMouseLeave,
           onMouseEnter: onMouseEnter,
           xType: 'ordinal',
-          yDomain: [0, 1] },
+          yDomain: [0, 1]
+        },
         children,
-        axes.concat(lines).concat(labelSeries)
+        axes.concat(lines).concat(labelSeries),
+        brushing && domains.map(function (d) {
+          var trigger = function trigger(row) {
+            _this2.setState({
+              brushFilters: _extends({}, brushFilters, _defineProperty({}, d.name, row ? { min: row.bottom, max: row.top } : null))
+            });
+          };
+          return _react2.default.createElement(_highlight2.default, {
+            key: d.name,
+            drag: true,
+            highlightX: d.name,
+            onBrushEnd: trigger,
+            onDragEnd: trigger,
+            highlightWidth: (width - marginLeft - marginRight) / domains.length,
+            enableX: false
+          });
+        })
       );
     }
   }]);
@@ -253,6 +311,7 @@ var ParallelCoordinates = function (_Component) {
 ParallelCoordinates.displayName = 'ParallelCoordinates';
 ParallelCoordinates.propTypes = {
   animation: _animation.AnimationPropType,
+  brushing: _propTypes2.default.bool,
   className: _propTypes2.default.string,
   colorType: _propTypes2.default.string,
   colorRange: _propTypes2.default.arrayOf(_propTypes2.default.string),
@@ -290,6 +349,9 @@ ParallelCoordinates.defaultProps = {
     lines: {
       strokeWidth: 1,
       strokeOpacity: 1
+    },
+    deselectedLineStyle: {
+      strokeOpacity: 0.1
     }
   },
   tickFormat: DEFAULT_FORMAT

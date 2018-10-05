@@ -55,7 +55,8 @@ function DiscreteColorLegendItem(_ref) {
     { className: className, onClick: onClick, onMouseEnter: onMouseEnter, onMouseLeave: onMouseLeave },
     _react2.default.createElement('span', {
       className: 'rv-discrete-color-legend-item__color',
-      style: disabled ? null : { background: color } }),
+      style: disabled ? null : { background: color }
+    }),
     _react2.default.createElement(
       'span',
       { className: 'rv-discrete-color-legend-item__title' },

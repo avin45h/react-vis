@@ -74,7 +74,8 @@ var TreemapDOM = function (_React$Component) {
         'div',
         {
           className: 'rv-treemap ' + (useCirclePacking ? 'rv-treemap-circle-packed' : '') + ' ' + className,
-          style: { height: height, width: width } },
+          style: { height: height, width: width }
+        },
         nodes.map(function (node, index) {
           // throw out the rootest node
           if (hideRootNode && !index) {

@@ -91,7 +91,7 @@ var propTypes = {
   tickSizeInner: _propTypes2.default.number,
   tickSizeOuter: _propTypes2.default.number,
   tickPadding: _propTypes2.default.number,
-  tickValues: _propTypes2.default.array,
+  tickValues: _propTypes2.default.arrayOf(_propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string])),
   tickFormat: _propTypes2.default.func,
   tickTotal: _propTypes2.default.number,
 
@@ -129,7 +129,6 @@ var Axis = function (_PureComponent) {
 
   _createClass(Axis, [{
     key: '_getDefaultAxisProps',
-
 
     /**
      * Define the default values depending on the data passed from the outside.
@@ -233,7 +232,8 @@ var Axis = function (_PureComponent) {
         {
           transform: 'translate(' + leftPos + ',' + topPos + ')',
           className: predefinedClassName + ' ' + axisClassName + ' ' + className,
-          style: style },
+          style: style
+        },
         !hideLine && _react2.default.createElement(_axisLine2.default, {
           height: height,
           width: width,
@@ -247,7 +247,8 @@ var Axis = function (_PureComponent) {
           height: height,
           width: width,
           style: _extends({}, style, style.title),
-          orientation: orientation }) : null
+          orientation: orientation
+        }) : null
       );
     }
   }]);

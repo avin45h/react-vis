@@ -93,53 +93,18 @@ var Crosshair = function (_PureComponent) {
   }
 
   _createClass(Crosshair, [{
-    key: '_renderCrosshairTitle',
+    key: '_renderCrosshairItems',
 
-
-    /**
-     * Render crosshair title.
-     * @returns {*} Container with the crosshair title.
-     * @private
-     */
-    value: function _renderCrosshairTitle() {
-      var _props = this.props,
-          values = _props.values,
-          titleFormat = _props.titleFormat,
-          style = _props.style;
-
-      var titleItem = titleFormat(values);
-      if (!titleItem) {
-        return null;
-      }
-      return _react2.default.createElement(
-        'div',
-        { className: 'rv-crosshair__title', key: 'title', style: style.title },
-        _react2.default.createElement(
-          'span',
-          { className: 'rv-crosshair__title__title' },
-          titleItem.title
-        ),
-        ': ',
-        _react2.default.createElement(
-          'span',
-          { className: 'rv-crosshair__title__value' },
-          titleItem.value
-        )
-      );
-    }
 
     /**
      * Render crosshair items (title + value for each series).
      * @returns {*} Array of React classes with the crosshair values.
      * @private
      */
-
-  }, {
-    key: '_renderCrosshairItems',
     value: function _renderCrosshairItems() {
-      var _props2 = this.props,
-          values = _props2.values,
-          itemsFormat = _props2.itemsFormat;
+      var _props = this.props,
+          values = _props.values,
+          itemsFormat = _props.itemsFormat;
 
       var items = itemsFormat(values);
       if (!items) {
@@ -164,6 +129,41 @@ var Crosshair = function (_PureComponent) {
           )
         );
       });
+    }
+
+    /**
+     * Render crosshair title.
+     * @returns {*} Container with the crosshair title.
+     * @private
+     */
+
+  }, {
+    key: '_renderCrosshairTitle',
+    value: function _renderCrosshairTitle() {
+      var _props2 = this.props,
+          values = _props2.values,
+          titleFormat = _props2.titleFormat,
+          style = _props2.style;
+
+      var titleItem = titleFormat(values);
+      if (!titleItem) {
+        return null;
+      }
+      return _react2.default.createElement(
+        'div',
+        { className: 'rv-crosshair__title', key: 'title', style: style.title },
+        _react2.default.createElement(
+          'span',
+          { className: 'rv-crosshair__title__title' },
+          titleItem.title
+        ),
+        ': ',
+        _react2.default.createElement(
+          'span',
+          { className: 'rv-crosshair__title__value' },
+          titleItem.value
+        )
+      );
     }
   }, {
     key: 'render',
@@ -196,10 +196,12 @@ var Crosshair = function (_PureComponent) {
         'div',
         {
           className: 'rv-crosshair ' + className,
-          style: { left: left + 'px', top: top + 'px' } },
+          style: { left: left + 'px', top: top + 'px' }
+        },
         _react2.default.createElement('div', {
           className: 'rv-crosshair__line',
-          style: _extends({ height: innerHeight + 'px' }, style.line) }),
+          style: _extends({ height: innerHeight + 'px' }, style.line)
+        }),
         _react2.default.createElement(
           'div',
           { className: innerClassName },
@@ -217,11 +219,24 @@ var Crosshair = function (_PureComponent) {
       );
     }
   }], [{
+    key: 'defaultProps',
+    get: function get() {
+      return {
+        titleFormat: defaultTitleFormat,
+        itemsFormat: defaultItemsFormat,
+        style: {
+          line: {},
+          title: {},
+          box: {}
+        }
+      };
+    }
+  }, {
     key: 'propTypes',
     get: function get() {
       return {
         className: _propTypes2.default.string,
-        values: _propTypes2.default.array,
+        values: _propTypes2.default.arrayOf(_propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string, _propTypes2.default.object])),
         series: _propTypes2.default.object,
         innerWidth: _propTypes2.default.number,
         innerHeight: _propTypes2.default.number,
@@ -235,19 +250,6 @@ var Crosshair = function (_PureComponent) {
           title: _propTypes2.default.object,
           box: _propTypes2.default.object
         })
-      };
-    }
-  }, {
-    key: 'defaultProps',
-    get: function get() {
-      return {
-        titleFormat: defaultTitleFormat,
-        itemsFormat: defaultItemsFormat,
-        style: {
-          line: {},
-          title: {},
-          box: {}
-        }
       };
     }
   }]);

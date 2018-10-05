@@ -164,7 +164,9 @@ var renderWhiskerMark = function renderWhiskerMark(whiskerMarkProps) {
 
     return _react2.default.createElement(
       'g',
-      { className: 'mark-whiskers', key: i,
+      {
+        className: 'mark-whiskers',
+        key: i,
         onClick: function onClick(e) {
           return valueClickHandler(d, e);
         },
@@ -248,8 +250,10 @@ var WhiskerSeries = function (_AbstractSeries) {
 
       return _react2.default.createElement(
         'g',
-        { className: predefinedClassName + ' ' + className,
-          transform: 'translate(' + marginLeft + ',' + marginTop + ')' },
+        {
+          className: predefinedClassName + ' ' + className,
+          transform: 'translate(' + marginLeft + ',' + marginTop + ')'
+        },
         data.map(renderWhiskerMark(whiskerMarkProps))
       );
     }

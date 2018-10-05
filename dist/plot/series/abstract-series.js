@@ -77,7 +77,6 @@ var AbstractSeries = function (_PureComponent) {
   _createClass(AbstractSeries, null, [{
     key: 'getParentConfig',
 
-
     /**
      * Get a default config for the parent.
      * @returns {Object} Empty config.
@@ -85,13 +84,14 @@ var AbstractSeries = function (_PureComponent) {
     value: function getParentConfig() {
       return {};
     }
-  }, {
-    key: 'requiresSVG',
 
     /**
      * Tells the rest of the world that it requires SVG to work.
      * @returns {boolean} Result.
      */
+
+  }, {
+    key: 'requiresSVG',
     get: function get() {
       return true;
     }
@@ -113,170 +113,34 @@ var AbstractSeries = function (_PureComponent) {
     return _this;
   }
 
-  /**
-   * Mouse over handler for the specific series' value.
-   * @param {Object} d Value object
-   * @param {Object} event Event.
-   * @protected
-   */
-
-
   _createClass(AbstractSeries, [{
-    key: '_valueMouseOverHandler',
-    value: function _valueMouseOverHandler(d, event) {
+    key: 'onParentMouseMove',
+    value: function onParentMouseMove(event) {
       var _props = this.props,
-          onValueMouseOver = _props.onValueMouseOver,
-          onSeriesMouseOver = _props.onSeriesMouseOver;
+          onNearestX = _props.onNearestX,
+          onNearestXY = _props.onNearestXY,
+          data = _props.data;
 
-      if (onValueMouseOver) {
-        onValueMouseOver(d, { event: event });
+      if (!onNearestX && !onNearestXY || !data) {
+        return;
       }
-      if (onSeriesMouseOver) {
-        onSeriesMouseOver({ event: event });
-      }
-    }
-
-    /**
-     * Mouse over handler for the entire series.
-     * @param {Object} event Event.
-     * @protected
-     */
-
-  }, {
-    key: '_seriesMouseOverHandler',
-    value: function _seriesMouseOverHandler(event) {
-      var onSeriesMouseOver = this.props.onSeriesMouseOver;
-
-      if (onSeriesMouseOver) {
-        onSeriesMouseOver({ event: event });
+      if (onNearestXY) {
+        this._handleNearestXY(event);
+      } else {
+        this._handleNearestX(event);
       }
     }
-
-    /**
-     * Mouse out handler for the specific series' value.
-     * @param {Object} d Value object
-     * @param {Object} event Event.
-     * @protected
-     */
-
   }, {
-    key: '_valueMouseOutHandler',
-    value: function _valueMouseOutHandler(d, event) {
-      var _props2 = this.props,
-          onValueMouseOut = _props2.onValueMouseOut,
-          onSeriesMouseOut = _props2.onSeriesMouseOut;
-
-      if (onValueMouseOut) {
-        onValueMouseOut(d, { event: event });
-      }
-      if (onSeriesMouseOut) {
-        onSeriesMouseOut({ event: event });
-      }
+    key: 'onParentTouchMove',
+    value: function onParentTouchMove(e) {
+      e.preventDefault();
+      this.onParentMouseMove(e);
     }
-
-    /**
-     * Mouse out handler for the entire series.
-     * @param {Object} event Event.
-     * @protected
-     */
-
   }, {
-    key: '_seriesMouseOutHandler',
-    value: function _seriesMouseOutHandler(event) {
-      var onSeriesMouseOut = this.props.onSeriesMouseOut;
-
-      if (onSeriesMouseOut) {
-        onSeriesMouseOut({ event: event });
-      }
-    }
-
-    /**
-     * Click handler for the specific series' value.
-     * @param {Object} d Value object
-     * @param {Object} event Event.
-     * @protected
-     */
-
-  }, {
-    key: '_valueClickHandler',
-    value: function _valueClickHandler(d, event) {
-      var _props3 = this.props,
-          onValueClick = _props3.onValueClick,
-          onSeriesClick = _props3.onSeriesClick;
-
-      if (onValueClick) {
-        onValueClick(d, { event: event });
-      }
-      if (onSeriesClick) {
-        onSeriesClick({ event: event });
-      }
-    }
-
-    /**
-     * Right Click handler for the specific series' value.
-     * @param {Object} d Value object
-     * @param {Object} event Event.
-     * @protected
-     */
-
-  }, {
-    key: '_valueRightClickHandler',
-    value: function _valueRightClickHandler(d, event) {
-      var _props4 = this.props,
-          onValueRightClick = _props4.onValueRightClick,
-          onSeriesRightClick = _props4.onSeriesRightClick;
-
-      if (onValueRightClick) {
-        onValueRightClick(d, { event: event });
-      }
-      if (onSeriesRightClick) {
-        onSeriesRightClick({ event: event });
-      }
-    }
-
-    /**
-     * Click handler for the entire series.
-     * @param {Object} event Event.
-     * @protected
-     */
-
-  }, {
-    key: '_seriesClickHandler',
-    value: function _seriesClickHandler(event) {
-      var onSeriesClick = this.props.onSeriesClick;
-
-      if (onSeriesClick) {
-        onSeriesClick({ event: event });
-      }
-    }
-
-    /**
-    * Right Click handler for the entire series.
-    * @param {Object} event Event.
-    * @protected
-    */
-
-  }, {
-    key: '_seriesRightClickHandler',
-    value: function _seriesRightClickHandler(event) {
-      var onSeriesRightClick = this.props.onSeriesRightClick;
-
-      if (onSeriesRightClick) {
-        onSeriesRightClick({ event: event });
-      }
-    }
-
-    /**
-     * Get attribute functor.
-     * @param {string} attr Attribute name
-     * @returns {*} Functor.
-     * @protected
-     */
-
-  }, {
-    key: '_getAttributeFunctor',
-    value: function _getAttributeFunctor(attr) {
-      return (0, _scalesUtils.getAttributeFunctor)(this.props, attr);
+    key: 'onParentTouchStart',
+    value: function onParentTouchStart(e) {
+      // prevent mouse event emulation
+      e.preventDefault();
     }
 
     /**
@@ -290,6 +154,19 @@ var AbstractSeries = function (_PureComponent) {
     key: '_getAttr0Functor',
     value: function _getAttr0Functor(attr) {
       return (0, _scalesUtils.getAttr0Functor)(this.props, attr);
+    }
+
+    /**
+     * Get attribute functor.
+     * @param {string} attr Attribute name
+     * @returns {*} Functor.
+     * @protected
+     */
+
+  }, {
+    key: '_getAttributeFunctor',
+    value: function _getAttributeFunctor(attr) {
+      return (0, _scalesUtils.getAttributeFunctor)(this.props, attr);
     }
 
     /**
@@ -322,11 +199,11 @@ var AbstractSeries = function (_PureComponent) {
   }, {
     key: '_getXYCoordinateInContainer',
     value: function _getXYCoordinateInContainer(event) {
-      var _props5 = this.props,
-          _props5$marginTop = _props5.marginTop,
-          marginTop = _props5$marginTop === undefined ? 0 : _props5$marginTop,
-          _props5$marginLeft = _props5.marginLeft,
-          marginLeft = _props5$marginLeft === undefined ? 0 : _props5$marginLeft;
+      var _props2 = this.props,
+          _props2$marginTop = _props2.marginTop,
+          marginTop = _props2$marginTop === undefined ? 0 : _props2$marginTop,
+          _props2$marginLeft = _props2.marginLeft,
+          marginLeft = _props2$marginLeft === undefined ? 0 : _props2$marginLeft;
       var evt = event.nativeEvent,
           currentTarget = event.currentTarget;
 
@@ -345,9 +222,9 @@ var AbstractSeries = function (_PureComponent) {
   }, {
     key: '_handleNearestX',
     value: function _handleNearestX(event) {
-      var _props6 = this.props,
-          onNearestX = _props6.onNearestX,
-          data = _props6.data;
+      var _props3 = this.props,
+          onNearestX = _props3.onNearestX,
+          data = _props3.data;
 
       var minDistance = Number.POSITIVE_INFINITY;
       var value = null;
@@ -377,9 +254,9 @@ var AbstractSeries = function (_PureComponent) {
   }, {
     key: '_handleNearestXY',
     value: function _handleNearestXY(event) {
-      var _props7 = this.props,
-          onNearestXY = _props7.onNearestXY,
-          data = _props7.data;
+      var _props4 = this.props,
+          onNearestXY = _props4.onNearestXY,
+          data = _props4.data;
 
 
       var coordinate = this._getXYCoordinateInContainer(event);
@@ -402,34 +279,157 @@ var AbstractSeries = function (_PureComponent) {
         event: event.nativeEvent
       });
     }
-  }, {
-    key: 'onParentMouseMove',
-    value: function onParentMouseMove(event) {
-      var _props8 = this.props,
-          onNearestX = _props8.onNearestX,
-          onNearestXY = _props8.onNearestXY,
-          data = _props8.data;
 
-      if (!onNearestX && !onNearestXY || !data) {
-        return;
-      }
-      if (onNearestXY) {
-        this._handleNearestXY(event);
-      } else {
-        this._handleNearestX(event);
+    /**
+     * Click handler for the entire series.
+     * @param {Object} event Event.
+     * @protected
+     */
+
+  }, {
+    key: '_seriesClickHandler',
+    value: function _seriesClickHandler(event) {
+      var onSeriesClick = this.props.onSeriesClick;
+
+      if (onSeriesClick) {
+        onSeriesClick({ event: event });
       }
     }
+
+    /**
+     * Mouse out handler for the entire series.
+     * @param {Object} event Event.
+     * @protected
+     */
+
   }, {
-    key: 'onParentTouchMove',
-    value: function onParentTouchMove(e) {
-      e.preventDefault();
-      this.onParentMouseMove(e);
+    key: '_seriesMouseOutHandler',
+    value: function _seriesMouseOutHandler(event) {
+      var onSeriesMouseOut = this.props.onSeriesMouseOut;
+
+      if (onSeriesMouseOut) {
+        onSeriesMouseOut({ event: event });
+      }
     }
+
+    /**
+     * Mouse over handler for the entire series.
+     * @param {Object} event Event.
+     * @protected
+     */
+
   }, {
-    key: 'onParentTouchStart',
-    value: function onParentTouchStart(e) {
-      // prevent mouse event emulation
-      e.preventDefault();
+    key: '_seriesMouseOverHandler',
+    value: function _seriesMouseOverHandler(event) {
+      var onSeriesMouseOver = this.props.onSeriesMouseOver;
+
+      if (onSeriesMouseOver) {
+        onSeriesMouseOver({ event: event });
+      }
+    }
+
+    /**
+     * Right Click handler for the entire series.
+     * @param {Object} event Event.
+     * @protected
+     */
+
+  }, {
+    key: '_seriesRightClickHandler',
+    value: function _seriesRightClickHandler(event) {
+      var onSeriesRightClick = this.props.onSeriesRightClick;
+
+      if (onSeriesRightClick) {
+        onSeriesRightClick({ event: event });
+      }
+    }
+
+    /**
+     * Click handler for the specific series' value.
+     * @param {Object} d Value object
+     * @param {Object} event Event.
+     * @protected
+     */
+
+  }, {
+    key: '_valueClickHandler',
+    value: function _valueClickHandler(d, event) {
+      var _props5 = this.props,
+          onValueClick = _props5.onValueClick,
+          onSeriesClick = _props5.onSeriesClick;
+
+      if (onValueClick) {
+        onValueClick(d, { event: event });
+      }
+      if (onSeriesClick) {
+        onSeriesClick({ event: event });
+      }
+    }
+
+    /**
+     * Mouse out handler for the specific series' value.
+     * @param {Object} d Value object
+     * @param {Object} event Event.
+     * @protected
+     */
+
+  }, {
+    key: '_valueMouseOutHandler',
+    value: function _valueMouseOutHandler(d, event) {
+      var _props6 = this.props,
+          onValueMouseOut = _props6.onValueMouseOut,
+          onSeriesMouseOut = _props6.onSeriesMouseOut;
+
+      if (onValueMouseOut) {
+        onValueMouseOut(d, { event: event });
+      }
+      if (onSeriesMouseOut) {
+        onSeriesMouseOut({ event: event });
+      }
+    }
+
+    /**
+     * Mouse over handler for the specific series' value.
+     * @param {Object} d Value object
+     * @param {Object} event Event.
+     * @protected
+     */
+
+  }, {
+    key: '_valueMouseOverHandler',
+    value: function _valueMouseOverHandler(d, event) {
+      var _props7 = this.props,
+          onValueMouseOver = _props7.onValueMouseOver,
+          onSeriesMouseOver = _props7.onSeriesMouseOver;
+
+      if (onValueMouseOver) {
+        onValueMouseOver(d, { event: event });
+      }
+      if (onSeriesMouseOver) {
+        onSeriesMouseOver({ event: event });
+      }
+    }
+
+    /**
+     * Right Click handler for the specific series' value.
+     * @param {Object} d Value object
+     * @param {Object} event Event.
+     * @protected
+     */
+
+  }, {
+    key: '_valueRightClickHandler',
+    value: function _valueRightClickHandler(d, event) {
+      var _props8 = this.props,
+          onValueRightClick = _props8.onValueRightClick,
+          onSeriesRightClick = _props8.onSeriesRightClick;
+
+      if (onValueRightClick) {
+        onValueRightClick(d, { event: event });
+      }
+      if (onSeriesRightClick) {
+        onSeriesRightClick({ event: event });
+      }
     }
   }]);
 

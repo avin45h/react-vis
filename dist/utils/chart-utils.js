@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.MarginPropType = undefined;
+exports.DEFAULT_MARGINS = exports.MarginPropType = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; // Copyright (c) 2016 - 2017 Uber Technologies, Inc.
 //
@@ -95,3 +95,10 @@ var MarginPropType = exports.MarginPropType = _propTypes2.default.oneOfType([_pr
   right: _propTypes2.default.number,
   bottom: _propTypes2.default.number
 }), _propTypes2.default.number]);
+
+var DEFAULT_MARGINS = exports.DEFAULT_MARGINS = {
+  left: 40,
+  right: 10,
+  top: 10,
+  bottom: 40
+};

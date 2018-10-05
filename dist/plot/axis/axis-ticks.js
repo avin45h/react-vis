@@ -81,28 +81,13 @@ var AxisTicks = function (_React$Component) {
   }
 
   _createClass(AxisTicks, [{
-    key: '_isAxisVertical',
-
-
-    /**
-     * Gets if the axis is vertical.
-     * @returns {boolean} True if vertical.
-     * @private
-     */
-    value: function _isAxisVertical() {
-      var orientation = this.props.orientation;
-
-      return orientation === LEFT || orientation === RIGHT;
-    }
+    key: '_areTicksWrapped',
 
     /**
      * Check if axis ticks should be mirrored (for the right and top positions.
      * @returns {boolean} True if mirrored.
      * @private
      */
-
-  }, {
-    key: '_areTicksWrapped',
     value: function _areTicksWrapped() {
       var orientation = this.props.orientation;
 
@@ -122,31 +107,6 @@ var AxisTicks = function (_React$Component) {
     }
 
     /**
-     * Get the props of the tick line.
-     * @returns {Object} Props.
-     * @private
-     */
-
-  }, {
-    key: '_getTickLineProps',
-    value: function _getTickLineProps() {
-      var _ref;
-
-      var _props = this.props,
-          tickSize = _props.tickSize,
-          _props$tickSizeOuter = _props.tickSizeOuter,
-          tickSizeOuter = _props$tickSizeOuter === undefined ? tickSize : _props$tickSizeOuter,
-          _props$tickSizeInner = _props.tickSizeInner,
-          tickSizeInner = _props$tickSizeInner === undefined ? tickSize : _props$tickSizeInner;
-
-      var isVertical = this._isAxisVertical();
-      var tickXAttr = isVertical ? 'y' : 'x';
-      var tickYAttr = isVertical ? 'x' : 'y';
-      var wrap = this._areTicksWrapped() ? -1 : 1;
-      return _ref = {}, _defineProperty(_ref, tickXAttr + '1', 0), _defineProperty(_ref, tickXAttr + '2', 0), _defineProperty(_ref, tickYAttr + '1', -wrap * tickSizeInner), _defineProperty(_ref, tickYAttr + '2', wrap * tickSizeOuter), _ref;
-    }
-
-    /**
      * Get attributes for the label of the tick.
      * @returns {Object} Object with properties.
      * @private
@@ -155,14 +115,14 @@ var AxisTicks = function (_React$Component) {
   }, {
     key: '_getTickLabelProps',
     value: function _getTickLabelProps() {
-      var _props2 = this.props,
-          orientation = _props2.orientation,
-          tickLabelAngle = _props2.tickLabelAngle,
-          tickSize = _props2.tickSize,
-          _props2$tickSizeOuter = _props2.tickSizeOuter,
-          tickSizeOuter = _props2$tickSizeOuter === undefined ? tickSize : _props2$tickSizeOuter,
-          _props2$tickPadding = _props2.tickPadding,
-          tickPadding = _props2$tickPadding === undefined ? tickSize : _props2$tickPadding;
+      var _props = this.props,
+          orientation = _props.orientation,
+          tickLabelAngle = _props.tickLabelAngle,
+          tickSize = _props.tickSize,
+          _props$tickSizeOuter = _props.tickSizeOuter,
+          tickSizeOuter = _props$tickSizeOuter === undefined ? tickSize : _props$tickSizeOuter,
+          _props$tickPadding = _props.tickPadding,
+          tickPadding = _props$tickPadding === undefined ? tickSize : _props$tickPadding;
 
       // Assign the text orientation inside the label of the tick mark.
 
@@ -192,6 +152,45 @@ var AxisTicks = function (_React$Component) {
         dy: dy,
         transform: transform
       };
+    }
+
+    /**
+     * Get the props of the tick line.
+     * @returns {Object} Props.
+     * @private
+     */
+
+  }, {
+    key: '_getTickLineProps',
+    value: function _getTickLineProps() {
+      var _ref;
+
+      var _props2 = this.props,
+          tickSize = _props2.tickSize,
+          _props2$tickSizeOuter = _props2.tickSizeOuter,
+          tickSizeOuter = _props2$tickSizeOuter === undefined ? tickSize : _props2$tickSizeOuter,
+          _props2$tickSizeInner = _props2.tickSizeInner,
+          tickSizeInner = _props2$tickSizeInner === undefined ? tickSize : _props2$tickSizeInner;
+
+      var isVertical = this._isAxisVertical();
+      var tickXAttr = isVertical ? 'y' : 'x';
+      var tickYAttr = isVertical ? 'x' : 'y';
+      var wrap = this._areTicksWrapped() ? -1 : 1;
+      return _ref = {}, _defineProperty(_ref, tickXAttr + '1', 0), _defineProperty(_ref, tickXAttr + '2', 0), _defineProperty(_ref, tickYAttr + '1', -wrap * tickSizeInner), _defineProperty(_ref, tickYAttr + '2', wrap * tickSizeOuter), _ref;
+    }
+
+    /**
+     * Gets if the axis is vertical.
+     * @returns {boolean} True if vertical.
+     * @private
+     */
+
+  }, {
+    key: '_isAxisVertical',
+    value: function _isAxisVertical() {
+      var orientation = this.props.orientation;
+
+      return orientation === LEFT || orientation === RIGHT;
     }
   }, {
     key: 'render',
@@ -225,9 +224,12 @@ var AxisTicks = function (_React$Component) {
 
         return _react2.default.createElement(
           'g',
-          _extends({ key: i }, translateFn(pos, 0), {
+          _extends({
+            key: i
+          }, translateFn(pos, 0), {
             className: 'rv-xy-plot__axis__tick',
-            style: style }),
+            style: style
+          }),
           _react2.default.createElement('line', _extends({}, pathProps, {
             className: 'rv-xy-plot__axis__tick__line',
             style: _extends({}, style, style.line)
@@ -247,7 +249,8 @@ var AxisTicks = function (_React$Component) {
         'g',
         {
           transform: 'translate(' + x + ', ' + y + ')',
-          className: 'rv-xy-plot__axis__ticks' },
+          className: 'rv-xy-plot__axis__ticks'
+        },
         ticks
       );
     }

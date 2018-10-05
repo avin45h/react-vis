@@ -104,54 +104,67 @@ var Hint = function (_PureComponent) {
   }
 
   _createClass(Hint, [{
-    key: '_getCSSRight',
+    key: '_getAlign',
 
 
     /**
-     * Get the right coordinate of the hint.
-     * When x undefined or null, edge case, pin right.
-     * @param {number} x X.
-     * @returns {{right: *}} Mixin.
+     * Obtain align object with horizontal and vertical settings
+     * but convert any AUTO values to the non-auto ALIGN depending on the
+     * values of x and y.
+     * @param {number} x X value.
+     * @param {number} y Y value.
+     * @returns {Object} Align object w/ horizontal, vertical prop strings.
      * @private
      */
-    value: function _getCSSRight(x) {
-      if (x === undefined || x === null) {
-        return {
-          right: 0
-        };
-      }
-
+    value: function _getAlign(x, y) {
       var _props = this.props,
           innerWidth = _props.innerWidth,
-          marginRight = _props.marginRight;
+          innerHeight = _props.innerHeight,
+          orientation = _props.orientation,
+          _props$align = _props.align,
+          horizontal = _props$align.horizontal,
+          vertical = _props$align.vertical;
 
-      return {
-        right: marginRight + innerWidth - x
-      };
+      var align = orientation ? this._mapOrientationToAlign(orientation) : { horizontal: horizontal, vertical: vertical };
+      if (horizontal === ALIGN.AUTO) {
+        align.horizontal = x > innerWidth / 2 ? ALIGN.LEFT : ALIGN.RIGHT;
+      }
+      if (vertical === ALIGN.AUTO) {
+        align.vertical = y > innerHeight / 2 ? ALIGN.TOP : ALIGN.BOTTOM;
+      }
+      return align;
     }
 
     /**
-     * Get the left coordinate of the hint.
-     * When x undefined or null, edge case, pin left.
-     * @param {number} x X.
-     * @returns {{left: *}} Mixin.
+     * Get the class names from align values.
+     * @param {Object} align object with horizontal and vertical prop strings.
+     * @returns {string} Class names.
      * @private
      */
 
   }, {
-    key: '_getCSSLeft',
-    value: function _getCSSLeft(x) {
-      if (x === undefined || x === null) {
-        return {
-          left: 0
-        };
-      }
+    key: '_getAlignClassNames',
+    value: function _getAlignClassNames(align) {
+      var orientation = this.props.orientation;
 
-      var marginLeft = this.props.marginLeft;
+      var orientationClass = orientation ? 'rv-hint--orientation-' + orientation : '';
+      return orientationClass + ' rv-hint--horizontalAlign-' + align.horizontal + '\n     rv-hint--verticalAlign-' + align.vertical;
+    }
 
-      return {
-        left: marginLeft + x
-      };
+    /**
+     * Get a CSS mixin for a proper positioning of the element.
+     * @param {Object} align object with horizontal and vertical prop strings.
+     * @param {number} x X position.
+     * @param {number} y Y position.
+     * @returns {Object} Object, that may contain `left` or `right, `top` or
+     * `bottom` properties.
+     * @private
+     */
+
+  }, {
+    key: '_getAlignStyle',
+    value: function _getAlignStyle(align, x, y) {
+      return _extends({}, this._getXCSS(align.horizontal, x), this._getYCSS(align.vertical, y));
     }
 
     /**
@@ -181,6 +194,56 @@ var Hint = function (_PureComponent) {
     }
 
     /**
+     * Get the left coordinate of the hint.
+     * When x undefined or null, edge case, pin left.
+     * @param {number} x X.
+     * @returns {{left: *}} Mixin.
+     * @private
+     */
+
+  }, {
+    key: '_getCSSLeft',
+    value: function _getCSSLeft(x) {
+      if (x === undefined || x === null) {
+        return {
+          left: 0
+        };
+      }
+
+      var marginLeft = this.props.marginLeft;
+
+      return {
+        left: marginLeft + x
+      };
+    }
+
+    /**
+     * Get the right coordinate of the hint.
+     * When x undefined or null, edge case, pin right.
+     * @param {number} x X.
+     * @returns {{right: *}} Mixin.
+     * @private
+     */
+
+  }, {
+    key: '_getCSSRight',
+    value: function _getCSSRight(x) {
+      if (x === undefined || x === null) {
+        return {
+          right: 0
+        };
+      }
+
+      var _props3 = this.props,
+          innerWidth = _props3.innerWidth,
+          marginRight = _props3.marginRight;
+
+      return {
+        right: marginRight + innerWidth - x
+      };
+    }
+
+    /**
      * Get the top coordinate of the hint.
      * When y undefined or null, edge case, pin top.
      * @param {number} y Y.
@@ -202,6 +265,74 @@ var Hint = function (_PureComponent) {
       return {
         top: marginTop + y
       };
+    }
+
+    /**
+     * Get the position for the hint and the appropriate class name.
+     * @returns {{style: Object, className: string}} Style and className for the
+     * hint.
+     * @private
+     */
+
+  }, {
+    key: '_getPositionInfo',
+    value: function _getPositionInfo() {
+      var _props4 = this.props,
+          value = _props4.value,
+          getAlignStyle = _props4.getAlignStyle;
+
+
+      var x = (0, _scalesUtils.getAttributeFunctor)(this.props, 'x')(value);
+      var y = (0, _scalesUtils.getAttributeFunctor)(this.props, 'y')(value);
+
+      var align = this._getAlign(x, y);
+
+      return {
+        position: getAlignStyle ? getAlignStyle(align, x, y) : this._getAlignStyle(align, x, y),
+        className: this._getAlignClassNames(align)
+      };
+    }
+  }, {
+    key: '_getXCSS',
+    value: function _getXCSS(horizontal, x) {
+      // obtain xCSS
+      switch (horizontal) {
+        case ALIGN.LEFT_EDGE:
+          // this pins x to left edge
+          return this._getCSSLeft(null);
+        case ALIGN.RIGHT_EDGE:
+          // this pins x to left edge
+          return this._getCSSRight(null);
+        case ALIGN.LEFT:
+          // this places hint text to the left of center, so set its right edge
+          return this._getCSSRight(x);
+        case ALIGN.RIGHT:
+        default:
+          // this places hint text to the right of center, so set its left edge
+          // default case should not be possible but if it happens set to RIGHT
+          return this._getCSSLeft(x);
+      }
+    }
+  }, {
+    key: '_getYCSS',
+    value: function _getYCSS(verticalAlign, y) {
+      // obtain yCSS
+      switch (verticalAlign) {
+        case ALIGN.TOP_EDGE:
+          // this pins x to top edge
+          return this._getCSSTop(null);
+        case ALIGN.BOTTOM_EDGE:
+          // this pins x to bottom edge
+          return this._getCSSBottom(null);
+        case ALIGN.BOTTOM:
+          // this places hint text to the bottom of center, so set its top edge
+          return this._getCSSTop(y);
+        case ALIGN.TOP:
+        default:
+          // this places hint text to the top of center, so set its bottom edge
+          // default case should not be possible but if it happens set to BOTTOM
+          return this._getCSSBottom(y);
+      }
     }
   }, {
     key: '_mapOrientationToAlign',
@@ -235,137 +366,6 @@ var Hint = function (_PureComponent) {
           break;
       }
     }
-
-    /**
-     * Obtain align object with horizontal and vertical settings
-     * but convert any AUTO values to the non-auto ALIGN depending on the
-     * values of x and y.
-     * @param {number} x X value.
-     * @param {number} y Y value.
-     * @returns {Object} Align object w/ horizontal, vertical prop strings.
-     * @private
-     */
-
-  }, {
-    key: '_getAlign',
-    value: function _getAlign(x, y) {
-      var _props3 = this.props,
-          innerWidth = _props3.innerWidth,
-          innerHeight = _props3.innerHeight,
-          orientation = _props3.orientation,
-          _props3$align = _props3.align,
-          horizontal = _props3$align.horizontal,
-          vertical = _props3$align.vertical;
-
-      var align = orientation ? this._mapOrientationToAlign(orientation) : { horizontal: horizontal, vertical: vertical };
-      if (horizontal === ALIGN.AUTO) {
-        align.horizontal = x > innerWidth / 2 ? ALIGN.LEFT : ALIGN.RIGHT;
-      }
-      if (vertical === ALIGN.AUTO) {
-        align.vertical = y > innerHeight / 2 ? ALIGN.TOP : ALIGN.BOTTOM;
-      }
-      return align;
-    }
-
-    /**
-     * Get a CSS mixin for a proper positioning of the element.
-     * @param {Object} align object with horizontal and vertical prop strings.
-     * @param {number} x X position.
-     * @param {number} y Y position.
-     * @returns {Object} Object, that may contain `left` or `right, `top` or
-     * `bottom` properties.
-     * @private
-     */
-
-  }, {
-    key: '_getAlignStyle',
-    value: function _getAlignStyle(align, x, y) {
-      return _extends({}, this._getXCSS(align.horizontal, x), this._getYCSS(align.vertical, y));
-    }
-  }, {
-    key: '_getYCSS',
-    value: function _getYCSS(verticalAlign, y) {
-      // obtain yCSS
-      switch (verticalAlign) {
-        case ALIGN.TOP_EDGE:
-          // this pins x to top edge
-          return this._getCSSTop(null);
-        case ALIGN.BOTTOM_EDGE:
-          // this pins x to bottom edge
-          return this._getCSSBottom(null);
-        case ALIGN.BOTTOM:
-          // this places hint text to the bottom of center, so set its top edge
-          return this._getCSSTop(y);
-        case ALIGN.TOP:
-        default:
-          // this places hint text to the top of center, so set its bottom edge
-          // default case should not be possible but if it happens set to BOTTOM
-          return this._getCSSBottom(y);
-      }
-    }
-  }, {
-    key: '_getXCSS',
-    value: function _getXCSS(horizontal, x) {
-      // obtain xCSS
-      switch (horizontal) {
-        case ALIGN.LEFT_EDGE:
-          // this pins x to left edge
-          return this._getCSSLeft(null);
-        case ALIGN.RIGHT_EDGE:
-          // this pins x to left edge
-          return this._getCSSRight(null);
-        case ALIGN.LEFT:
-          // this places hint text to the left of center, so set its right edge
-          return this._getCSSRight(x);
-        case ALIGN.RIGHT:
-        default:
-          // this places hint text to the right of center, so set its left edge
-          // default case should not be possible but if it happens set to RIGHT
-          return this._getCSSLeft(x);
-      }
-    }
-
-    /**
-     * Get the class names from align values.
-     * @param {Object} align object with horizontal and vertical prop strings.
-     * @returns {string} Class names.
-     * @private
-     */
-
-  }, {
-    key: '_getAlignClassNames',
-    value: function _getAlignClassNames(align) {
-      var orientation = this.props.orientation;
-
-      var orientationClass = orientation ? 'rv-hint--orientation-' + orientation : '';
-      return orientationClass + ' rv-hint--horizontalAlign-' + align.horizontal + '\n     rv-hint--verticalAlign-' + align.vertical;
-    }
-
-    /**
-     * Get the position for the hint and the appropriate class name.
-     * @returns {{style: Object, className: string}} Style and className for the
-     * hint.
-     * @private
-     */
-
-  }, {
-    key: '_getPositionInfo',
-    value: function _getPositionInfo() {
-      var _props4 = this.props,
-          value = _props4.value,
-          getAlignStyle = _props4.getAlignStyle;
-
-
-      var x = (0, _scalesUtils.getAttributeFunctor)(this.props, 'x')(value);
-      var y = (0, _scalesUtils.getAttributeFunctor)(this.props, 'y')(value);
-
-      var align = this._getAlign(x, y);
-
-      return {
-        position: getAlignStyle ? getAlignStyle(align, x, y) : this._getAlignStyle(align, x, y),
-        className: this._getAlignClassNames(align)
-      };
-    }
   }, {
     key: 'render',
     value: function render() {
@@ -385,7 +385,8 @@ var Hint = function (_PureComponent) {
           className: 'rv-hint ' + className,
           style: _extends({}, style, position, {
             position: 'absolute'
-          }) },
+          })
+        },
         children ? children : _react2.default.createElement(
           'div',
           { className: 'rv-hint__content', style: style.content },
@@ -410,6 +411,18 @@ var Hint = function (_PureComponent) {
       );
     }
   }], [{
+    key: 'defaultProps',
+    get: function get() {
+      return {
+        format: defaultFormat,
+        align: {
+          horizontal: ALIGN.AUTO,
+          vertical: ALIGN.AUTO
+        },
+        style: {}
+      };
+    }
+  }, {
     key: 'propTypes',
     get: function get() {
       return {
@@ -427,18 +440,6 @@ var Hint = function (_PureComponent) {
         }),
         getAlignStyle: _propTypes2.default.func,
         orientation: _propTypes2.default.oneOf([ORIENTATION.BOTTOM_LEFT, ORIENTATION.BOTTOM_RIGHT, ORIENTATION.TOP_LEFT, ORIENTATION.TOP_RIGHT])
-      };
-    }
-  }, {
-    key: 'defaultProps',
-    get: function get() {
-      return {
-        format: defaultFormat,
-        align: {
-          horizontal: ALIGN.AUTO,
-          vertical: ALIGN.AUTO
-        },
-        style: {}
       };
     }
   }]);

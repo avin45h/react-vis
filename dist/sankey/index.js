@@ -90,6 +90,7 @@ var Sankey = function (_Component) {
           hasVoronoi = _props.hasVoronoi,
           height = _props.height,
           hideLabels = _props.hideLabels,
+          labelRotation = _props.labelRotation,
           layout = _props.layout,
           links = _props.links,
           linkOpacity = _props.linkOpacity,
@@ -114,7 +115,9 @@ var Sankey = function (_Component) {
       });
 
       var _getInnerDimensions = (0, _chartUtils.getInnerDimensions)({
-        margin: margin, height: height, width: width
+        margin: margin,
+        height: height,
+        width: width
       }, DEFAULT_MARGINS),
           marginLeft = _getInnerDimensions.marginLeft,
           marginTop = _getInnerDimensions.marginTop,
@@ -131,7 +134,8 @@ var Sankey = function (_Component) {
         _xyPlot2.default,
         _extends({}, this.props, {
           yType: 'literal',
-          className: 'rv-sankey ' + className }),
+          className: 'rv-sankey ' + className
+        }),
         linksCopy.map(function (link, i) {
           return _react2.default.createElement(_sankeyLink2.default, {
             style: style.links,
@@ -144,7 +148,8 @@ var Sankey = function (_Component) {
             strokeWidth: Math.max(link.width, 1),
             node: link,
             nWidth: nWidth,
-            key: 'link-' + i });
+            key: 'link-' + i
+          });
         }),
         _react2.default.createElement(_verticalRectSeries2.default, {
           animation: animation,
@@ -164,19 +169,23 @@ var Sankey = function (_Component) {
           onValueClick: onValueClick,
           onValueMouseOver: onValueMouseOver,
           onValueMouseOut: onValueMouseOut,
-          colorType: 'literal' }),
+          colorType: 'literal'
+        }),
         !hideLabels && _react2.default.createElement(_labelSeries2.default, {
           animation: animation,
           className: className,
-          data: nodesCopy.map(function (node) {
-            return {
+          rotation: labelRotation,
+          labelAnchorY: 'text-before-edge',
+          data: nodesCopy.map(function (node, i) {
+            return _extends({
               x: node.x0 + (node.x0 < width / 2 ? nWidth + 10 : -10),
               y: (node.y0 + node.y1) / 2 - marginTop,
               label: node.name,
               style: _extends({
+                textAnchor: node.x0 < width / 2 ? 'start' : 'end',
                 dy: '-.5em'
               }, style.labels)
-            };
+            }, nodes[i]);
           })
         }),
         hasVoronoi && _react2.default.createElement(_voronoi2.default, {
@@ -206,6 +215,7 @@ Sankey.defaultProps = {
   className: '',
   hasVoronoi: false,
   hideLabels: false,
+  labelRotation: 0,
   layout: 50,
   margin: DEFAULT_MARGINS,
   nodePadding: 10,
@@ -222,12 +232,14 @@ Sankey.defaultProps = {
     labels: {}
   }
 };
+
 Sankey.propTypes = {
   align: _propTypes2.default.oneOf(['justify', 'left', 'right', 'center']),
   className: _propTypes2.default.string,
   hasVoronoi: _propTypes2.default.bool,
   height: _propTypes2.default.number.isRequired,
   hideLabels: _propTypes2.default.bool,
+  labelRotation: _propTypes2.default.number,
   layout: _propTypes2.default.number,
   links: _propTypes2.default.arrayOf(_propTypes2.default.shape({
     source: _propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.object]).isRequired,

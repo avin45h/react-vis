@@ -174,7 +174,13 @@ var RadialChart = function (_Component) {
           style = _props.style,
           width = _props.width;
 
-      var mappedData = getWedgesToRender({ data: data, height: height, hideRootNode: hideRootNode, width: width, getAngle: getAngle });
+      var mappedData = getWedgesToRender({
+        data: data,
+        height: height,
+        hideRootNode: hideRootNode,
+        width: width,
+        getAngle: getAngle
+      });
       var radialDomain = (0, _seriesUtils.getRadialDomain)(mappedData);
       var arcProps = _extends({
         colorType: colorType
@@ -237,6 +243,7 @@ RadialChart.propTypes = {
   })).isRequired,
   getAngle: _propTypes2.default.func,
   getAngle0: _propTypes2.default.func,
+  padAngle: _propTypes2.default.oneOfType([_propTypes2.default.func, _propTypes2.default.number]),
   getRadius: _propTypes2.default.func,
   getRadius0: _propTypes2.default.func,
   getLabel: _propTypes2.default.func,
@@ -256,6 +263,7 @@ RadialChart.defaultProps = {
   className: '',
   colorType: 'category',
   colorRange: _theme.DISCRETE_COLOR_RANGE,
+  padAngle: 0,
   getAngle: function getAngle(d) {
     return d.angle;
   },

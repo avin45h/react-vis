@@ -63,7 +63,8 @@ var defaultProps = _extends({}, _abstractSeries2.default.defaultProps, {
   center: { x: 0, y: 0 },
   arcClassName: '',
   className: '',
-  style: {}
+  style: {},
+  padAngle: 0
 });
 
 /**
@@ -178,10 +179,21 @@ var ArcSeries = function (_AbstractSeries) {
           { className: 'rv-xy-plot__series--arc__animation-wrapper' },
           _react2.default.createElement(
             _animation2.default,
-            _extends({}, this.props, { animatedProps: _seriesUtils.ANIMATED_SERIES_PROPS, data: cloneData }),
-            _react2.default.createElement(ArcSeries, _extends({}, this.props, { animation: null, disableSeries: true, data: cloneData }))
+            _extends({}, this.props, {
+              animatedProps: _seriesUtils.ANIMATED_SERIES_PROPS,
+              data: cloneData
+            }),
+            _react2.default.createElement(ArcSeries, _extends({}, this.props, {
+              animation: null,
+              disableSeries: true,
+              data: cloneData
+            }))
           ),
-          _react2.default.createElement(ArcSeries, _extends({}, this.props, { animation: null, hideSeries: true, style: { stroke: 'red' } }))
+          _react2.default.createElement(ArcSeries, _extends({}, this.props, {
+            animation: null,
+            hideSeries: true,
+            style: { stroke: 'red' }
+          }))
         );
       }
 
@@ -203,14 +215,16 @@ var ArcSeries = function (_AbstractSeries) {
 
       return _react2.default.createElement(
         'g',
-        { className: predefinedClassName + ' ' + className,
+        {
+          className: predefinedClassName + ' ' + className,
           onMouseOver: this._seriesMouseOverHandler,
           onMouseOut: this._seriesMouseOutHandler,
           onClick: this._seriesClickHandler,
           onContextMenu: this._seriesRightClickHandler,
           opacity: hideSeries ? 0 : 1,
           pointerEvents: disableSeries ? 'none' : 'all',
-          transform: 'translate(' + (marginLeft + x(center)) + ',' + (marginTop + y(center)) + ')' },
+          transform: 'translate(' + (marginLeft + x(center)) + ',' + (marginTop + y(center)) + ')'
+        },
         data.map(function (row, i) {
           var noRadius = radiusDomain[1] === radiusDomain[0];
           var arcArg = {

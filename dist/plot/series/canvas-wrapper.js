@@ -148,12 +148,12 @@ var CanvasWrapper = function (_Component) {
       }
       ctx.scale(pixelRatio, pixelRatio);
 
-      this.drawChildren(this.props, null, ctx);
+      this.drawChildren(null, this.props, ctx);
     }
   }, {
     key: 'componentDidUpdate',
-    value: function componentDidUpdate(nextProps) {
-      this.drawChildren(nextProps, this.props, this.canvas.getContext('2d'));
+    value: function componentDidUpdate(oldProps) {
+      this.drawChildren(oldProps, this.props, this.canvas.getContext('2d'));
     }
 
     /**
@@ -166,7 +166,7 @@ var CanvasWrapper = function (_Component) {
 
   }, {
     key: 'drawChildren',
-    value: function drawChildren(newProps, oldProps, ctx) {
+    value: function drawChildren(oldProps, newProps, ctx) {
       var children = newProps.children,
           innerHeight = newProps.innerHeight,
           innerWidth = newProps.innerWidth,
@@ -226,7 +226,8 @@ var CanvasWrapper = function (_Component) {
           ref: function ref(_ref) {
             return _this2.canvas = _ref;
           }
-        })
+        }),
+        this.props.children
       );
     }
   }], [{

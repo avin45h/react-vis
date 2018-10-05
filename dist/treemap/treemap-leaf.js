@@ -116,7 +116,8 @@ var TreemapLeaf = function (_React$Component) {
           onClick: function onClick(event) {
             return onLeafClick(node, event);
           },
-          style: leafStyle },
+          style: leafStyle
+        },
         _react2.default.createElement(
           'div',
           { className: 'rv-treemap__leaf__content' },

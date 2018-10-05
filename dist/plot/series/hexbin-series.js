@@ -16,23 +16,21 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _d3Contour = require('d3-contour');
-
-var _d3Geo = require('d3-geo');
-
-var _d3Scale = require('d3-scale');
-
-var _abstractSeries = require('./abstract-series');
-
-var _abstractSeries2 = _interopRequireDefault(_abstractSeries);
-
 var _animation = require('../../animation');
 
 var _animation2 = _interopRequireDefault(_animation);
 
+var _d3Hexbin = require('d3-hexbin');
+
+var _d3Scale = require('d3-scale');
+
 var _seriesUtils = require('../../utils/series-utils');
 
 var _theme = require('../../theme');
+
+var _abstractSeries = require('./abstract-series');
+
+var _abstractSeries2 = _interopRequireDefault(_abstractSeries);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -40,7 +38,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Copyright (c) 2017 Uber Technologies, Inc.
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } // Copyright (c) 2016 - 2017 Uber Technologies, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -60,32 +60,35 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var predefinedClassName = 'rv-xy-plot__series rv-xy-plot__series--contour';
+var predefinedClassName = 'rv-xy-plot__series rv-xy-plot__series--hexbin';
 
-function getDomain(data) {
-  return data.reduce(function (acc, row) {
-    return {
-      min: Math.min(acc.min, row.value),
-      max: Math.max(acc.max, row.value)
-    };
-  }, { min: Infinity, max: -Infinity });
+function getColorDomain(_ref, hexes) {
+  var countDomain = _ref.countDomain;
+
+  if (countDomain) {
+    return countDomain;
+  }
+  return [0, Math.max.apply(Math, _toConsumableArray(hexes.map(function (row) {
+    return row.length;
+  })))];
 }
 
-var ContourSeries = function (_AbstractSeries) {
-  _inherits(ContourSeries, _AbstractSeries);
+var HexbinSeries = function (_AbstractSeries) {
+  _inherits(HexbinSeries, _AbstractSeries);
 
-  function ContourSeries() {
-    _classCallCheck(this, ContourSeries);
+  function HexbinSeries() {
+    _classCallCheck(this, HexbinSeries);
 
-    return _possibleConstructorReturn(this, (ContourSeries.__proto__ || Object.getPrototypeOf(ContourSeries)).apply(this, arguments));
+    return _possibleConstructorReturn(this, (HexbinSeries.__proto__ || Object.getPrototypeOf(HexbinSeries)).apply(this, arguments));
   }
 
-  _createClass(ContourSeries, [{
+  _createClass(HexbinSeries, [{
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var _props = this.props,
           animation = _props.animation,
-          bandwidth = _props.bandwidth,
           className = _props.className,
           colorRange = _props.colorRange,
           data = _props.data,
@@ -93,10 +96,14 @@ var ContourSeries = function (_AbstractSeries) {
           innerWidth = _props.innerWidth,
           marginLeft = _props.marginLeft,
           marginTop = _props.marginTop,
-          style = _props.style;
+          radius = _props.radius,
+          sizeHexagonsWithCount = _props.sizeHexagonsWithCount,
+          style = _props.style,
+          xOffset = _props.xOffset,
+          yOffset = _props.yOffset;
 
 
-      if (!data || !innerWidth || !innerHeight) {
+      if (!data) {
         return null;
       }
 
@@ -104,61 +111,70 @@ var ContourSeries = function (_AbstractSeries) {
         return _react2.default.createElement(
           _animation2.default,
           _extends({}, this.props, { animatedProps: _seriesUtils.ANIMATED_SERIES_PROPS }),
-          _react2.default.createElement(ContourSeries, _extends({}, this.props, { animation: null }))
+          _react2.default.createElement(HexbinSeries, _extends({}, this.props, { animation: null }))
         );
       }
-
       var x = this._getAttributeFunctor('x');
       var y = this._getAttributeFunctor('y');
 
-      var contouredData = (0, _d3Contour.contourDensity)().x(function (d) {
-        return x(d);
+      var hex = (0, _d3Hexbin.hexbin)().x(function (d) {
+        return x(d) + xOffset;
       }).y(function (d) {
-        return y(d);
-      }).size([innerWidth, innerHeight]).bandwidth(bandwidth)(data);
+        return y(d) + yOffset;
+      }).radius(radius).size([innerWidth, innerHeight]);
 
-      var geo = (0, _d3Geo.geoPath)();
+      var hexagonPath = hex.hexagon();
+      var hexes = hex(data);
 
-      var _getDomain = getDomain(contouredData),
-          min = _getDomain.min,
-          max = _getDomain.max;
-
-      var colorScale = (0, _d3Scale.scaleLinear)().domain([min, max]).range(colorRange || _theme.CONTINUOUS_COLOR_RANGE);
+      var countDomain = getColorDomain(this.props, hexes);
+      var color = (0, _d3Scale.scaleLinear)().domain(countDomain).range(colorRange);
+      var size = (0, _d3Scale.scaleLinear)().domain(countDomain).range([0, radius]);
       return _react2.default.createElement(
         'g',
         {
           className: predefinedClassName + ' ' + className,
           transform: 'translate(' + marginLeft + ',' + marginTop + ')'
         },
-        contouredData.map(function (polygon, index) {
-          return _react2.default.createElement('path', {
-            className: 'rv-xy-plot__series--contour-line',
-            key: 'rv-xy-plot__series--contour-line-' + index,
-            d: geo(polygon),
-            style: _extends({
-              fill: colorScale(polygon.value)
-            }, style)
-          });
+        hexes.map(function (d, i) {
+          var attrs = {
+            style: style,
+            d: sizeHexagonsWithCount ? hex.hexagon(size(d.length)) : hexagonPath,
+            fill: color(d.length),
+            transform: 'translate(' + d.x + ', ' + d.y + ')',
+            key: i,
+            onClick: function onClick(e) {
+              return _this2._valueClickHandler(d, e);
+            },
+            onContextMenu: function onContextMenu(e) {
+              return _this2._valueRightClickHandler(d, e);
+            },
+            onMouseOver: function onMouseOver(e) {
+              return _this2._valueMouseOverHandler(d, e);
+            },
+            onMouseOut: function onMouseOut(e) {
+              return _this2._valueMouseOutHandler(d, e);
+            }
+          };
+          return _react2.default.createElement('path', attrs);
         })
       );
     }
   }]);
 
-  return ContourSeries;
+  return HexbinSeries;
 }(_abstractSeries2.default);
 
-ContourSeries.propTypes = _extends({}, _abstractSeries2.default.propTypes, {
-  animation: _propTypes2.default.bool,
-  bandwidth: _propTypes2.default.number,
-  className: _propTypes2.default.string,
-  marginLeft: _propTypes2.default.number,
-  marginTop: _propTypes2.default.number,
-  style: _propTypes2.default.object
+HexbinSeries.propTypes = _extends({}, _abstractSeries2.default.propTypes, {
+  radius: _propTypes2.default.number
 });
 
-ContourSeries.defaultProps = _extends({}, _abstractSeries2.default.defaultProps, {
-  bandwidth: 40,
-  style: {}
-});
+HexbinSeries.defaultProps = {
+  radius: 20,
+  colorRange: _theme.CONTINUOUS_COLOR_RANGE,
+  xOffset: 0,
+  yOffset: 0
+};
 
-exports.default = ContourSeries;
+HexbinSeries.displayName = 'HexbinSeries';
+
+exports.default = HexbinSeries;

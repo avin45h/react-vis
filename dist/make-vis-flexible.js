@@ -134,7 +134,6 @@ function getDisplayName(Component) {
  */
 
 function makeFlexible(Component, isWidthFlexible, isHeightFlexible) {
-
   var ResultClass = function (_React$Component) {
     _inherits(ResultClass, _React$Component);
 
@@ -209,7 +208,9 @@ function makeFlexible(Component, isWidthFlexible, isHeightFlexible) {
             height = _state.height,
             width = _state.width;
 
-        var props = _extends({}, this.props, { animation: height === 0 && width === 0 ? null : this.props.animation });
+        var props = _extends({}, this.props, {
+          animation: height === 0 && width === 0 ? null : this.props.animation
+        });
 
         var updatedDimensions = _extends({}, isHeightFlexible ? { height: height } : {}, isWidthFlexible ? { width: width } : {});
 
@@ -219,7 +220,8 @@ function makeFlexible(Component, isWidthFlexible, isHeightFlexible) {
             ref: function ref(_ref) {
               return _this2[CONTAINER_REF] = _ref;
             },
-            style: { width: '100%', height: '100%' } },
+            style: { width: '100%', height: '100%' }
+          },
           _react2.default.createElement(Component, _extends({}, updatedDimensions, props))
         );
       }

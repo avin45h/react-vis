@@ -84,7 +84,8 @@ function SearchableDiscreteColorLegend(props) {
         placeholder: searchPlaceholder,
         className: 'rv-search-wrapper__form__input',
         value: searchText,
-        onChange: onChange })
+        onChange: onChange
+      })
     ),
     _react2.default.createElement(
       'div',

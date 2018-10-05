@@ -66,7 +66,7 @@ var propTypes = {
 
   style: _propTypes2.default.object,
 
-  tickValues: _propTypes2.default.array,
+  tickValues: _propTypes2.default.arrayOf(_propTypes2.default.oneOfType([_propTypes2.default.number, _propTypes2.default.string])),
   tickTotal: _propTypes2.default.number,
 
   animation: _animation.AnimationPropType,
@@ -150,7 +150,8 @@ var GridLines = function (_PureComponent) {
         'g',
         {
           transform: 'translate(' + left + ',' + top + ')',
-          className: 'rv-xy-plot__grid-lines' },
+          className: 'rv-xy-plot__grid-lines'
+        },
         values.map(function (v, i) {
           var _pathProps;
 
@@ -159,7 +160,8 @@ var GridLines = function (_PureComponent) {
           return _react2.default.createElement('line', _extends({}, pathProps, {
             key: i,
             className: 'rv-xy-plot__grid-lines__line',
-            style: style }));
+            style: style
+          }));
         })
       );
     }

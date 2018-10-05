@@ -99,28 +99,32 @@ var Borders = function (_PureComponent) {
           x: 0,
           y: height - marginBottom,
           width: width,
-          height: marginBottom }),
+          height: marginBottom
+        }),
         _react2.default.createElement('rect', {
           className: CLASSES.left + ' ' + className + '-left',
           style: _extends({}, style.all, style.left),
           x: 0,
           y: 0,
           width: marginLeft,
-          height: height }),
+          height: height
+        }),
         _react2.default.createElement('rect', {
           className: CLASSES.right + ' ' + className + '-right',
           style: _extends({}, style.all, style.right),
           x: width - marginRight,
           y: 0,
           width: marginRight,
-          height: height }),
+          height: height
+        }),
         _react2.default.createElement('rect', {
           className: CLASSES.top + ' ' + className + '-top',
           style: _extends({}, style.all, style.top),
           x: 0,
           y: 0,
           width: width,
-          height: marginTop })
+          height: marginTop
+        })
       );
     }
   }]);

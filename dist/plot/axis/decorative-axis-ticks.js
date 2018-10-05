@@ -57,7 +57,12 @@ function decorativeAxisTick(props) {
       tickSize = props.tickSize,
       style = props.style;
 
-  var _generatePoints = (0, _axisUtils.generatePoints)({ axisStart: axisStart, axisEnd: axisEnd, numberOfTicks: numberOfTicks, axisDomain: axisDomain }),
+  var _generatePoints = (0, _axisUtils.generatePoints)({
+    axisStart: axisStart,
+    axisEnd: axisEnd,
+    numberOfTicks: numberOfTicks,
+    axisDomain: axisDomain
+  }),
       points = _generatePoints.points;
   // add a quarter rotation to make ticks orthogonal to axis
 
@@ -78,7 +83,11 @@ function decorativeAxisTick(props) {
     }, style.text);
     return _react2.default.createElement(
       'g',
-      { key: index, transform: 'translate(' + point.x + ', ' + point.y + ')', className: 'rv-xy-plot__axis__tick' },
+      {
+        key: index,
+        transform: 'translate(' + point.x + ', ' + point.y + ')',
+        className: 'rv-xy-plot__axis__tick'
+      },
       _react2.default.createElement('line', _extends({}, tickProps, { className: 'rv-xy-plot__axis__tick__line' })),
       _react2.default.createElement(
         'text',
